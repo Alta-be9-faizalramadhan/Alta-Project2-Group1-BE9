@@ -2,16 +2,14 @@ package request
 
 import (
 	"altaproject/features/users"
-	"time"
 )
 
 type User struct {
-	UserName  string    `json:"username" form:"username"`
-	Email     string    `json:"email" form:"email"`
-	Password  string    `json:"password" form:"password"`
-	Alamat    string    `json:"alamat" form:"alamat"`
-	NoTelp    string    `json:"notelp" form:"notelp"`
-	UpdatedAt time.Time `json:"updated_at" form:"updated_at"`
+	UserName string `json:"username" form:"username"`
+	Email    string `json:"email" form:"email"`
+	Password string `json:"password" form:"password"`
+	Alamat   string `json:"alamat" form:"alamat"`
+	NoTelp   string `json:"notelp" form:"notelp"`
 }
 
 func ToCore(req User) users.Core {

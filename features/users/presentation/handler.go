@@ -64,11 +64,53 @@ func (h *UserHandler) AddUser(c echo.Context) error {
 	})
 }
 
+func (h *UserHandler) PutData(c echo.Context) error {
+	//idToken := middlewares.ExtractTokenUserId(c)
+	id := c.Param("id")
+	idUser, errId := strconv.Atoi(id)
+	// if idToken != idUser {
+	if errId != nil {
+		return c.JSON(http.StatusBadRequest, map[string]interface{}{
+			"message": "failed to recognized ID",
+		})
+	}
+	var user _requestUser.User
+	errBind := c.Bind(&user)
+	if errBind != nil {
+		return c.JSON(http.StatusBadRequest, map[string]interface{}{
+			"message": "failed to bind data",
+		})
+	}
+	result, err := h.userBusiness.UpdateData(idUser, _requestUser.ToCore(user))
+	if err != nil {
+		return c.JSON(http.StatusBadRequest, map[string]interface{}{
+			"message": "failed to update data",
+		})
+	}
+	if result == 0 {
+		return c.JSON(http.StatusInternalServerError, map[string]interface{}{
+			"message": "failed to update data",
+		})
+	}
+	if result == -1 {
+		return c.JSON(http.StatusBadRequest, map[string]interface{}{
+			"message": err.Error(),
+		})
+	}
+	return c.JSON(http.StatusOK, map[string]interface{}{
+		"message": "success update data",
+	})
+}
+
 func (h *UserHandler) GetUser(c echo.Context) error {
 	// idToken, errToken := ExtractToken(c)
 	// if errToken != nil {
 	// 	c.JSON(http.StatusBadRequest, map[string]interface{}{
 	// 		"message": "invalid token",
+	// 	})
+	// }
+	// 	return c.JSON(http.StatusUnauthorized, map[string]interface{}{
+	// 		"message": "unauthorized",
 	// 	})
 	// }
 	id := c.Param("id")
@@ -78,13 +120,11 @@ func (h *UserHandler) GetUser(c echo.Context) error {
 			"message": "id not recognize",
 		})
 	}
-
-	// if idToken != idnya {
-	// 	return c.JSON(http.StatusUnauthorized, map[string]interface{}{
-	// 		"message": "unauthorized",
-	// 	})
-	// }
-
+	if errId != nil {
+		return c.JSON(http.StatusBadRequest, map[string]interface{}{
+			"message": "failed to recognized ID",
+		})
+	}
 	result, err := h.userBusiness.GetDataUser(idnya)
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, map[string]interface{}{

@@ -40,6 +40,18 @@ func (repo *mysqlUserRepository) InsertData(input users.Core) (row int, err erro
 	return int(result.RowsAffected), nil
 }
 
+func (repo *mysqlUserRepository) UpdateData(id int, data users.Core) (int, error) {
+	var update = fromCore(data)
+	result := repo.db.Model(&User{}).Where("id = ?", id).Updates(&update)
+	if result.Error != nil {
+		return 0, result.Error
+	}
+	if result.RowsAffected == 0 {
+		return 0, fmt.Errorf("failed to update data")
+	}
+	return int(result.RowsAffected), nil
+}
+
 func (repo *mysqlUserRepository) SelectDataUser(id int) (response users.Core, err error) {
 	var dataUsers User
 

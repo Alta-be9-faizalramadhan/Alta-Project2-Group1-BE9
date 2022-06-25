@@ -3,22 +3,13 @@ package config
 import (
 	_mUsers "altaproject/features/users/data"
 	"fmt"
-	"log"
 	"os"
 
-	"github.com/joho/godotenv"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 )
 
 func InitDB() *gorm.DB {
-
-	err := godotenv.Load(".env")
-
-	if err != nil {
-		log.Fatalf("Error loading .env file")
-	}
-
 	dbUsername := os.Getenv("DB_Username")
 	dbPassword := os.Getenv("DB_Password")
 	dbPort := os.Getenv("DB_Port")
