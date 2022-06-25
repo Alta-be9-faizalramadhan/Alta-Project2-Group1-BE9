@@ -28,3 +28,11 @@ func (uc *userUsecase) InsertData(input users.Core) (row int, err error) {
 	row, err = uc.userData.InsertData(input)
 	return row, err
 }
+
+func (uc *userUsecase) UpdateData(id int, data users.Core) (row int, err error) {
+	if data.UserName == "" || data.Alamat == "" || data.Email == "" || data.Password == "" || data.NoTelp == "" {
+		return -1, errors.New("all input data must be filled")
+	}
+	row, err = uc.userData.UpdateData(id, data)
+	return row, err
+}
