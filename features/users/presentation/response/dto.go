@@ -10,7 +10,7 @@ type User struct {
 	UserName  string    `json:"name"`
 	Email     string    `json:"email"`
 	Alamat    string    `json:"alamat"`
-	NoTelp    string    `json:"NoTelp"`
+	NoTelp    string    `json:"notelp"`
 	CreatedAt time.Time `json:"created_at"`
 }
 
