@@ -136,3 +136,33 @@ func (h *UserHandler) GetUser(c echo.Context) error {
 		"data":    _responseUser.FromCore(result),
 	})
 }
+
+func (h *UserHandler) DeleteUser(c echo.Context) error {
+	// idTok, errDel := _middlewares.ExtractToken(c)
+	// if errDel != nil {
+	// 	return c.JSON(http.StatusBadRequest, map[string]interface{}{
+	// 		"message": "invalid",
+	// 	})
+	// }
+	id := c.Param("id")
+	idDel, errId := strconv.Atoi(id)
+	if errId != nil {
+		return c.JSON(http.StatusBadRequest, map[string]interface{}{
+			"message": "id not recognize",
+		})
+	}
+	// if idTok != idDel {
+	// 	return c.JSON(http.StatusUnauthorized, map[string]interface{}{
+	// 		"message": "Unauthorized",
+	// 	})
+	// }
+	_, err := h.userBusiness.DeleteData(idDel)
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, map[string]interface{}{
+			"message": "failed to delete user",
+		})
+	}
+	return c.JSON(http.StatusOK, map[string]interface{}{
+		"message": "success to delete user",
+	})
+}

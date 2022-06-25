@@ -18,6 +18,7 @@ type Business interface {
 	InsertData(data Core) (row int, err error)
 	UpdateData(id int, data Core) (row int, er error)
 	GetDataUser(id int) (data Core, err error)
+	DeleteData(id int) (row int, err error)
 }
 
 type Data interface {
@@ -25,4 +26,5 @@ type Data interface {
 	InsertData(data Core) (row int, err error)
 	UpdateData(id int, data Core) (row int, er error)
 	SelectDataUser(id int) (data Core, err error)
+	DeleteDataUser(param int) (row int, err error)
 }

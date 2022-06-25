@@ -13,6 +13,7 @@ func New(presenter factory.Presenter) *echo.Echo {
 	e.GET("users/:id", presenter.UserPresenter.GetUser)
 	e.POST("users", presenter.UserPresenter.AddUser)
 	e.PUT("users/:id", presenter.UserPresenter.PutData)
+	e.DELETE("users/:id", presenter.UserPresenter.DeleteUser)
 
 	return e
 }
