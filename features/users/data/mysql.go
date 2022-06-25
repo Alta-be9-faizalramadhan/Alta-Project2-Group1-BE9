@@ -51,3 +51,13 @@ func (repo *mysqlUserRepository) UpdateData(id int, data users.Core) (int, error
 	}
 	return int(result.RowsAffected), nil
 }
+
+func (repo *mysqlUserRepository) SelectDataUser(id int) (response users.Core, err error) {
+	var dataUsers User
+
+	result := repo.db.First(&dataUsers, id)
+	if result.Error != nil {
+		return users.Core{}, result.Error
+	}
+	return dataUsers.toCore(), nil
+}

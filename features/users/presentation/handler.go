@@ -69,10 +69,6 @@ func (h *UserHandler) PutData(c echo.Context) error {
 	id := c.Param("id")
 	idUser, errId := strconv.Atoi(id)
 	// if idToken != idUser {
-	// 	return c.JSON(http.StatusUnauthorized, map[string]interface{}{
-	// 		"message": "unauthorized",
-	// 	})
-	// }
 	if errId != nil {
 		return c.JSON(http.StatusBadRequest, map[string]interface{}{
 			"message": "failed to recognized ID",
@@ -103,5 +99,40 @@ func (h *UserHandler) PutData(c echo.Context) error {
 	}
 	return c.JSON(http.StatusOK, map[string]interface{}{
 		"message": "success update data",
+	})
+}
+
+func (h *UserHandler) GetUser(c echo.Context) error {
+	// idToken, errToken := ExtractToken(c)
+	// if errToken != nil {
+	// 	c.JSON(http.StatusBadRequest, map[string]interface{}{
+	// 		"message": "invalid token",
+	// 	})
+	// }
+	// 	return c.JSON(http.StatusUnauthorized, map[string]interface{}{
+	// 		"message": "unauthorized",
+	// 	})
+	// }
+	id := c.Param("id")
+	idnya, errId := strconv.Atoi(id)
+	if errId != nil {
+		return c.JSON(http.StatusBadRequest, map[string]interface{}{
+			"message": "id not recognize",
+		})
+	}
+	if errId != nil {
+		return c.JSON(http.StatusBadRequest, map[string]interface{}{
+			"message": "failed to recognized ID",
+		})
+	}
+	result, err := h.userBusiness.GetDataUser(idnya)
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, map[string]interface{}{
+			"message": "failed to get data user",
+		})
+	}
+	return c.JSON(http.StatusOK, map[string]interface{}{
+		"message": "succes",
+		"data":    _responseUser.FromCore(result),
 	})
 }
