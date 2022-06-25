@@ -36,19 +36,6 @@ func toCoreList(data []User) []users.Core {
 	return result
 }
 
-func toCore(data User) users.Core {
-	result := users.Core{
-		ID:       int(data.ID),
-		UserName: data.UserName,
-		Email:    data.Email,
-		Alamat:   data.Alamat,
-		NoTelp:   data.NoTelp,
-		// Password:  data.Password,
-		CreatedAt: data.CreatedAt,
-	}
-	return result
-}
-
 func fromCore(core users.Core) User {
 	return User{
 		UserName: core.UserName,

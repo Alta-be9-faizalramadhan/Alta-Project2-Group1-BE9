@@ -28,3 +28,8 @@ func (uc *userUsecase) InsertData(input users.Core) (row int, err error) {
 	row, err = uc.userData.InsertData(input)
 	return row, err
 }
+
+func (uc *userUsecase) GetDataUser(idnya int) (resp users.Core, err error) {
+	resp, err = uc.userData.SelectDataUser(idnya)
+	return resp, err
+}

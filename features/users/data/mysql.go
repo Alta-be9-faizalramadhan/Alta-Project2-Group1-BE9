@@ -39,3 +39,13 @@ func (repo *mysqlUserRepository) InsertData(input users.Core) (row int, err erro
 
 	return int(result.RowsAffected), nil
 }
+
+func (repo *mysqlUserRepository) SelectDataUser(id int) (response users.Core, err error) {
+	var dataUsers User
+
+	result := repo.db.First(&dataUsers, id)
+	if result.Error != nil {
+		return users.Core{}, result.Error
+	}
+	return dataUsers.toCore(), nil
+}
