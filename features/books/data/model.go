@@ -15,7 +15,7 @@ type Book struct {
 	Category    string `json:"category" form:"category"`
 	Price       uint   `json:"price" form:"price"`
 	Stock       uint   `json:"stock" form:"stock"`
-	BookPage    uint   `json:"book_page" form:"book_page"`
+	BookPage    string `json:"book_page" form:"book_page"`
 	Sold        uint   `json:"sold" form:"sold"`
 	Description string `json:"description" form:"description"`
 	UserID      uint   `json:"user_id" form:"user_id"`
@@ -24,8 +24,8 @@ type Book struct {
 
 type User struct {
 	gorm.Model
-	Name  string `json:"name" form:"name"`
-	Books []Book
+	UserName string `json:"user_name" form:"user_name"`
+	Books    []Book
 }
 
 func (data *Book) toCore() books.Core {
@@ -44,8 +44,8 @@ func (data *Book) toCore() books.Core {
 		CreatedAt:   data.CreatedAt,
 		UpdatedAt:   data.UpdatedAt,
 		User: books.User{
-			ID:   int(data.User.ID),
-			Name: data.User.Name,
+			ID:       int(data.User.ID),
+			UserName: data.User.UserName,
 		},
 	}
 }

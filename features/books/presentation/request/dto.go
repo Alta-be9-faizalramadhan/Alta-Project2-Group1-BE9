@@ -10,7 +10,7 @@ type Book struct {
 	Category    string `json:"category" form:"category"`
 	Price       uint   `json:"price" form:"price"`
 	Stock       uint   `json:"stock" form:"stock"`
-	BookPage    uint   `json:"book_page" form:"book_page"`
+	BookPage    string `json:"book_page" form:"book_page"`
 	Sold        uint   `json:"sold" form:"sold"`
 	Description string `json:"description" form:"description"`
 	UserId      int    `json:"user_id" form:"user_id"`

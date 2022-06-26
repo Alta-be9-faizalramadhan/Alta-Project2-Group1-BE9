@@ -13,7 +13,7 @@ type Core struct {
 	Category    string
 	Price       uint
 	Stock       uint
-	BookPage    uint
+	BookPage    string
 	Sold        uint
 	Description string
 	CreatedAt   time.Time
@@ -22,14 +22,16 @@ type Core struct {
 }
 
 type User struct {
-	ID   int
-	Name string
+	ID       int
+	UserName string
 }
 
 type Business interface {
 	GetAllBook(limit, offset uint) (data []Core, err error)
+	CreateNewBook(data Core) (row int, err error)
 }
 
 type Data interface {
 	SelectAllBook(limit, offset uint) (data []Core, err error)
+	InsertNewBook(data Core) (row int, err error)
 }

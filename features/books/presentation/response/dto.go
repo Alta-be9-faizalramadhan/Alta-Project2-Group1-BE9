@@ -14,7 +14,7 @@ type Book struct {
 	Category    string    `json:"category" form:"category"`
 	Price       uint      `json:"price" form:"price"`
 	Stock       uint      `json:"stock" form:"stock"`
-	BookPage    uint      `json:"book_page" form:"book_page"`
+	BookPage    string    `json:"book_page" form:"book_page"`
 	Sold        uint      `json:"sold" form:"sold"`
 	Description string    `json:"description" form:"description"`
 	CreatedAt   time.Time `json:"created_at" form:"created_at"`
@@ -22,8 +22,8 @@ type Book struct {
 }
 
 type User struct {
-	ID   int    `json:"id"`
-	Name string `json:"name"`
+	ID       int    `json:"id"`
+	UserName string `json:"name"`
 }
 
 func FromCore(data books.Core) Book {
@@ -41,8 +41,8 @@ func FromCore(data books.Core) Book {
 		Description: data.Description,
 		CreatedAt:   data.CreatedAt,
 		User: User{
-			ID:   data.User.ID,
-			Name: data.User.Name,
+			ID:       data.User.ID,
+			UserName: data.User.UserName,
 		},
 	}
 }
