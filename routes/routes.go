@@ -15,5 +15,7 @@ func New(presenter factory.Presenter) *echo.Echo {
 	e.PUT("users/:id", presenter.UserPresenter.PutData)
 	e.DELETE("users/:id", presenter.UserPresenter.DeleteUser)
 
+	e.GET("books", presenter.BookPresenter.GetAllBook)
+
 	return e
 }
