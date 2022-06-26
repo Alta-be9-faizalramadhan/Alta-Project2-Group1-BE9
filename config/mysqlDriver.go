@@ -1,6 +1,7 @@
 package config
 
 import (
+	_mBooks "altaproject/features/books/data"
 	_mUsers "altaproject/features/users/data"
 	"fmt"
 	"os"
@@ -35,4 +36,5 @@ func InitDB() *gorm.DB {
 
 func InitMigrate(db *gorm.DB) {
 	db.AutoMigrate(&_mUsers.User{})
+	db.AutoMigrate(&_mBooks.Book{})
 }
