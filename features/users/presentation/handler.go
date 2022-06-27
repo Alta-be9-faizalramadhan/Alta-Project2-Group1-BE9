@@ -166,3 +166,28 @@ func (h *UserHandler) DeleteUser(c echo.Context) error {
 		"message": "success to delete user",
 	})
 }
+
+func (h *UserHandler) Login(c echo.Context) error {
+	var authData _requestUser.User
+	err := c.Bind(&authData)
+	if err != nil {
+		return c.JSON(http.StatusBadRequest, map[string]interface{}{
+			"message": "failed to bind data, check your input",
+		})
+	}
+	dataUser := _requestUser.ToCore(authData)
+	token, username, e := h.userBusiness.Login(dataUser)
+	if e != nil {
+		return c.JSON(http.StatusBadRequest, map[string]interface{}{
+			"message": "email or password incorrect",
+		})
+	}
+	data := map[string]interface{}{
+		"token": token,
+		"nama":  username,
+	}
+	return c.JSON(http.StatusOK, map[string]interface{}{
+		"message": "login succes",
+		"data":    data,
+	})
+}

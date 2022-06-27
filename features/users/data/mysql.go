@@ -1,7 +1,9 @@
 package data
 
 import (
+	"altaproject/encription"
 	"altaproject/features/users"
+	"altaproject/middlewares"
 	"fmt"
 
 	"gorm.io/gorm"
@@ -27,8 +29,15 @@ func (repo *mysqlUserRepository) SelectData(data string) (response []users.Core,
 }
 
 func (repo *mysqlUserRepository) InsertData(input users.Core) (row int, err error) {
-	user := fromCore(input)
-
+	// user := fromCore(input)
+	passwordHash := encription.GetMD5Hash(input.Password)
+	user := User{
+		UserName: input.UserName,
+		Email:    input.Email,
+		Password: string(passwordHash),
+		Alamat:   input.Alamat,
+		NoTelp:   input.NoTelp,
+	}
 	result := repo.db.Create(&user)
 	if result.Error != nil {
 		return 0, result.Error
@@ -72,4 +81,28 @@ func (repo *mysqlUserRepository) DeleteDataUser(data int) (row int, err error) {
 		return 0, fmt.Errorf("failed to delete user")
 	}
 	return int(result.RowsAffected), nil
+}
+
+func (repo *mysqlUserRepository) LoginUser(data users.Core) (token string, username string, err error) {
+	userData := User{}
+
+	result := repo.db.Where("email = ?", data.Email).First(&userData)
+	result = repo.db.Select("password").First(&userData, "email = ?", data.Email)
+	strPassword := encription.GetMD5Hash(data.Password)
+	if strPassword != userData.toCore().Password {
+		return "", "", fmt.Errorf("error")
+	} else {
+		if result.Error != nil {
+			return "", "", result.Error
+		}
+		if result.RowsAffected != 1 {
+			return "", "", fmt.Errorf("error")
+		}
+		token, errToken := middlewares.CreateToken(int(userData.ID))
+		if errToken != nil {
+			return "", "", errToken
+		}
+		username = userData.UserName
+		return token, username, nil
+	}
 }

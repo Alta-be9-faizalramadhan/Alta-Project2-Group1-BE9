@@ -19,6 +19,7 @@ type Business interface {
 	UpdateData(id int, data Core) (row int, er error)
 	GetDataUser(id int) (data Core, err error)
 	DeleteData(id int) (row int, err error)
+	Login(data Core) (token string, nama string, err error)
 }
 
 type Data interface {
@@ -27,4 +28,5 @@ type Data interface {
 	UpdateData(id int, data Core) (row int, er error)
 	SelectDataUser(id int) (data Core, err error)
 	DeleteDataUser(param int) (row int, err error)
+	LoginUser(data Core) (token string, nama string, err error)
 }
