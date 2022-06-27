@@ -37,3 +37,8 @@ func (uc *bookUsecase) UpdatedBook(id int, data books.Core) (row int, err error)
 	row, err = uc.bookData.UpdatedBook(id, data)
 	return row, err
 }
+
+func (uc *bookUsecase) SoftDeleteBook(id int) (row int, err error) {
+	row, err = uc.bookData.SoftDeleteBook(id)
+	return row, err
+}
