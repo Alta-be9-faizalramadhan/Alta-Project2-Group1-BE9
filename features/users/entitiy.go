@@ -1,6 +1,8 @@
 package users
 
-import "time"
+import (
+	"time"
+)
 
 type Core struct {
 	ID        int
@@ -19,7 +21,7 @@ type Business interface {
 	UpdateData(id int, data Core) (row int, er error)
 	GetDataUser(id int) (data Core, err error)
 	DeleteData(id int) (row int, err error)
-	Login(data Core) (token string, nama string, err error)
+	Login(email string, password string) (token string, nama string, id int, err error)
 }
 
 type Data interface {
@@ -28,5 +30,5 @@ type Data interface {
 	UpdateData(id int, data Core) (row int, er error)
 	SelectDataUser(id int) (data Core, err error)
 	DeleteDataUser(param int) (row int, err error)
-	LoginUser(data Core) (token string, nama string, err error)
+	LoginUser(email string, password string) (token string, nama string, id int, err error)
 }

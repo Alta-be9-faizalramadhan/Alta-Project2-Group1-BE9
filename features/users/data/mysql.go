@@ -83,26 +83,24 @@ func (repo *mysqlUserRepository) DeleteDataUser(data int) (row int, err error) {
 	return int(result.RowsAffected), nil
 }
 
-func (repo *mysqlUserRepository) LoginUser(data users.Core) (token string, username string, err error) {
+func (repo *mysqlUserRepository) LoginUser(email string, password string) (token string, username string, id int, err error) {
 	userData := User{}
-
-	result := repo.db.Where("email = ?", data.Email).First(&userData)
-	result = repo.db.Select("password").First(&userData, "email = ?", data.Email)
-	strPassword := encription.GetMD5Hash(data.Password)
+	result := repo.db.Where("email = ?", email).First(&userData)
+	//result = repo.db.Select("password").First(&userData, "email = ?", email)
+	strPassword := encription.GetMD5Hash(password)
 	if strPassword != userData.toCore().Password {
-		return "", "", fmt.Errorf("error")
+		return "", "", 0, fmt.Errorf("error")
 	} else {
 		if result.Error != nil {
-			return "", "", result.Error
+			return "", "", 0, result.Error
 		}
 		if result.RowsAffected != 1 {
-			return "", "", fmt.Errorf("error")
+			return "", "", 0, fmt.Errorf("error")
 		}
 		token, errToken := middlewares.CreateToken(int(userData.ID))
 		if errToken != nil {
-			return "", "", errToken
+			return "", "", 0, errToken
 		}
-		username = userData.UserName
-		return token, username, nil
+		return token, userData.UserName, int(userData.ID), nil
 	}
 }

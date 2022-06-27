@@ -47,7 +47,7 @@ func (uc *userUsecase) DeleteData(id int) (row int, err error) {
 	return row, err
 }
 
-func (uc *userUsecase) Login(data users.Core) (token string, nama string, err error) {
-	token, nama, err = uc.userData.LoginUser(data)
-	return token, nama, err
+func (uc *userUsecase) Login(email string, password string) (token string, nama string, id int, err error) {
+	token, nama, id, err = uc.userData.LoginUser(email, password)
+	return token, nama, id, err
 }
