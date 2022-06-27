@@ -121,3 +121,34 @@ func (h *BookHandler) GetBookById(c echo.Context) error {
 		"data":    _responseBook.FromCore(result),
 	})
 }
+
+func (h *BookHandler) UpdatedBook(c echo.Context) error {
+	id := c.Param("id")
+	idBook, errId := strconv.Atoi(id)
+	if errId != nil {
+		return c.JSON(http.StatusBadRequest, map[string]interface{}{
+			"message": "failed to recognized ID",
+		})
+	}
+	var book _requestBook.Book
+	errBind := c.Bind(&book)
+	if errBind != nil {
+		return c.JSON(http.StatusBadRequest, map[string]interface{}{
+			"message": "failed to bind data",
+		})
+	}
+	result, err := h.bookBusiness.UpdatedBook(idBook, _requestBook.ToCore(book))
+	if err != nil {
+		return c.JSON(http.StatusBadRequest, map[string]interface{}{
+			"message": "failed to update data",
+		})
+	}
+	if result == 0 {
+		return c.JSON(http.StatusInternalServerError, map[string]interface{}{
+			"message": "failed to update data",
+		})
+	}
+	return c.JSON(http.StatusOK, map[string]interface{}{
+		"message": "success update data",
+	})
+}

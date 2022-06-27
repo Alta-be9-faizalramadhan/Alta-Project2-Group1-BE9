@@ -46,3 +46,15 @@ func (repo *mysqlBookRepository) SelectBookById(id int) (data books.Core, err er
 	}
 	return profile.toCore(), nil
 }
+
+func (repo *mysqlBookRepository) UpdatedBook(id int, data books.Core) (int, error) {
+	var update = fromCore(data)
+	result := repo.db.Model(&Book{}).Where("id = ?", id).Updates(&update)
+	if result.Error != nil {
+		return 0, result.Error
+	}
+	if result.RowsAffected == 0 {
+		return 0, result.Error
+	}
+	return int(result.RowsAffected), nil
+}
