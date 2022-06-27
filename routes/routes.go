@@ -28,6 +28,7 @@ func New(presenter factory.Presenter) *echo.Echo {
 	e.GET("books/:id", presenter.BookPresenter.GetBookById)
 	e.POST("books", presenter.BookPresenter.PostNewBook, middlewares.JWTMiddleware())
 	e.PUT("books/:id", presenter.BookPresenter.UpdatedBook, middlewares.JWTMiddleware())
+	e.DELETE("books/:id", presenter.BookPresenter.DeleteBookById, middlewares.JWTMiddleware())
 
 	return e
 }

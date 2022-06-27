@@ -152,3 +152,27 @@ func (h *BookHandler) UpdatedBook(c echo.Context) error {
 		"message": "success update data",
 	})
 }
+
+func (h *BookHandler) DeleteBookById(c echo.Context) error {
+	id := c.Param("id")
+	idBook, errId := strconv.Atoi(id)
+	if errId != nil {
+		return c.JSON(http.StatusBadRequest, map[string]interface{}{
+			"message": "failed to recognized ID",
+		})
+	}
+	result, err := h.bookBusiness.SoftDeleteBook(idBook)
+	if err != nil {
+		return c.JSON(http.StatusBadRequest, map[string]interface{}{
+			"message": "failed to delete data",
+		})
+	}
+	if result == 0 {
+		return c.JSON(http.StatusInternalServerError, map[string]interface{}{
+			"message": "failed to delete data",
+		})
+	}
+	return c.JSON(http.StatusOK, map[string]interface{}{
+		"message": "success delete data",
+	})
+}

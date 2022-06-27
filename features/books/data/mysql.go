@@ -58,3 +58,14 @@ func (repo *mysqlBookRepository) UpdatedBook(id int, data books.Core) (int, erro
 	}
 	return int(result.RowsAffected), nil
 }
+
+func (repo *mysqlBookRepository) SoftDeleteBook(id int) (int, error) {
+	result := repo.db.Where("id = ?", id).Delete(&Book{})
+	if result.Error != nil {
+		return 0, result.Error
+	}
+	if result.RowsAffected == 0 {
+		return 0, result.Error
+	}
+	return int(result.RowsAffected), nil
+}
