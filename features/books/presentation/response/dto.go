@@ -23,7 +23,7 @@ type Book struct {
 
 type User struct {
 	ID       int    `json:"id"`
-	UserName string `json:"name"`
+	UserName string `json:"user_name"`
 }
 
 func FromCore(data books.Core) Book {
