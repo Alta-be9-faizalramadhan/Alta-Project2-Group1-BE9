@@ -69,3 +69,12 @@ func (repo *mysqlBookRepository) SoftDeleteBook(id int) (int, error) {
 	}
 	return int(result.RowsAffected), nil
 }
+
+func (repo *mysqlBookRepository) SelectBookByCategory(category string) (response []books.Core, err error) {
+	var dataBooks []Book
+	result := repo.db.Where("category = ?", category).Find(&dataBooks)
+	if result.Error != nil {
+		return []books.Core{}, result.Error
+	}
+	return toCoreList(dataBooks), nil
+}
