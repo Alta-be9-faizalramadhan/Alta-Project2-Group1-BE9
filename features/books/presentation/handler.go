@@ -176,3 +176,22 @@ func (h *BookHandler) DeleteBookById(c echo.Context) error {
 		"message": "success delete data",
 	})
 }
+
+func (h *BookHandler) GetBookByCategory(c echo.Context) error {
+	category := c.QueryParam("category")
+	result, err := h.bookBusiness.SelectBookByCategory(category)
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, map[string]interface{}{
+			"message": "failed to get all data",
+		})
+	}
+	if result == nil {
+		return c.JSON(http.StatusInternalServerError, map[string]interface{}{
+			"message": "no result",
+		})
+	}
+	return c.JSON(http.StatusOK, map[string]interface{}{
+		"message": "success",
+		"data":    _responseBook.FromCoreList(result),
+	})
+}

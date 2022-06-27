@@ -42,3 +42,8 @@ func (uc *bookUsecase) SoftDeleteBook(id int) (row int, err error) {
 	row, err = uc.bookData.SoftDeleteBook(id)
 	return row, err
 }
+
+func (uc *bookUsecase) SelectBookByCategory(category string) (resp []books.Core, err error) {
+	resp, err = uc.bookData.SelectBookByCategory(category)
+	return resp, err
+}
