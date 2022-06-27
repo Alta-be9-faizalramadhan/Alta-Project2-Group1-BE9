@@ -4,6 +4,7 @@ import (
 	"altaproject/features/users"
 	_requestUser "altaproject/features/users/presentation/request"
 	_responseUser "altaproject/features/users/presentation/response"
+	"altaproject/middlewares"
 	"net/http"
 	"strconv"
 
@@ -21,7 +22,24 @@ func NewUserHandler(business users.Business) *UserHandler {
 }
 
 func (h *UserHandler) GetAll(c echo.Context) error {
-	//param, query param, binding
+	idToken, errToken := middlewares.ExtractToken(c)
+	if errToken != nil {
+		c.JSON(http.StatusBadRequest, map[string]interface{}{
+			"message": "invalid token",
+		})
+	}
+	id := c.Param("id")
+	idUser, errId := strconv.Atoi(id)
+	if errId != nil {
+		return c.JSON(http.StatusBadRequest, map[string]interface{}{
+			"message": "failed to recognized ID",
+		})
+	}
+	if idToken != idUser {
+		return c.JSON(http.StatusUnauthorized, map[string]interface{}{
+			"message": "unauthorized",
+		})
+	}
 	limit := c.QueryParam("limit")
 	offset := c.QueryParam("offset")
 	limitint, _ := strconv.Atoi(limit)
@@ -65,13 +83,22 @@ func (h *UserHandler) AddUser(c echo.Context) error {
 }
 
 func (h *UserHandler) PutData(c echo.Context) error {
-	//idToken := middlewares.ExtractTokenUserId(c)
+	idToken, errToken := middlewares.ExtractToken(c)
+	if errToken != nil {
+		c.JSON(http.StatusBadRequest, map[string]interface{}{
+			"message": "invalid token",
+		})
+	}
 	id := c.Param("id")
 	idUser, errId := strconv.Atoi(id)
-	// if idToken != idUser {
 	if errId != nil {
 		return c.JSON(http.StatusBadRequest, map[string]interface{}{
 			"message": "failed to recognized ID",
+		})
+	}
+	if idToken != idUser {
+		return c.JSON(http.StatusUnauthorized, map[string]interface{}{
+			"message": "unauthorized",
 		})
 	}
 	var user _requestUser.User
@@ -103,21 +130,22 @@ func (h *UserHandler) PutData(c echo.Context) error {
 }
 
 func (h *UserHandler) GetUser(c echo.Context) error {
-	// idToken, errToken := ExtractToken(c)
-	// if errToken != nil {
-	// 	c.JSON(http.StatusBadRequest, map[string]interface{}{
-	// 		"message": "invalid token",
-	// 	})
-	// }
-	// 	return c.JSON(http.StatusUnauthorized, map[string]interface{}{
-	// 		"message": "unauthorized",
-	// 	})
-	// }
+	idToken, errToken := middlewares.ExtractToken(c)
+	if errToken != nil {
+		c.JSON(http.StatusBadRequest, map[string]interface{}{
+			"message": "invalid token",
+		})
+	}
 	id := c.Param("id")
 	idnya, errId := strconv.Atoi(id)
 	if errId != nil {
 		return c.JSON(http.StatusBadRequest, map[string]interface{}{
 			"message": "id not recognize",
+		})
+	}
+	if idToken != idnya {
+		return c.JSON(http.StatusUnauthorized, map[string]interface{}{
+			"message": "unauthorized",
 		})
 	}
 	if errId != nil {
@@ -138,12 +166,12 @@ func (h *UserHandler) GetUser(c echo.Context) error {
 }
 
 func (h *UserHandler) DeleteUser(c echo.Context) error {
-	// idTok, errDel := _middlewares.ExtractToken(c)
-	// if errDel != nil {
-	// 	return c.JSON(http.StatusBadRequest, map[string]interface{}{
-	// 		"message": "invalid",
-	// 	})
-	// }
+	idTok, errDel := middlewares.ExtractToken(c)
+	if errDel != nil {
+		return c.JSON(http.StatusBadRequest, map[string]interface{}{
+			"message": "invalid",
+		})
+	}
 	id := c.Param("id")
 	idDel, errId := strconv.Atoi(id)
 	if errId != nil {
@@ -151,11 +179,11 @@ func (h *UserHandler) DeleteUser(c echo.Context) error {
 			"message": "id not recognize",
 		})
 	}
-	// if idTok != idDel {
-	// 	return c.JSON(http.StatusUnauthorized, map[string]interface{}{
-	// 		"message": "Unauthorized",
-	// 	})
-	// }
+	if idTok != idDel {
+		return c.JSON(http.StatusUnauthorized, map[string]interface{}{
+			"message": "Unauthorized",
+		})
+	}
 	_, err := h.userBusiness.DeleteData(idDel)
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, map[string]interface{}{
