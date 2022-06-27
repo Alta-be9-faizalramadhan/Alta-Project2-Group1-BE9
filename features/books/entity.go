@@ -29,9 +29,11 @@ type User struct {
 type Business interface {
 	GetAllBook(limit, offset uint) (data []Core, err error)
 	CreateNewBook(data Core) (row int, err error)
+	GetBookById(id int) (data Core, err error)
 }
 
 type Data interface {
 	SelectAllBook(limit, offset uint) (data []Core, err error)
 	InsertNewBook(data Core) (row int, err error)
+	SelectBookById(id int) (data Core, err error)
 }

@@ -27,3 +27,8 @@ func (uc *bookUsecase) CreateNewBook(input books.Core) (row int, err error) {
 	row, err = uc.bookData.InsertNewBook(input)
 	return row, err
 }
+
+func (uc *bookUsecase) GetBookById(id int) (resp books.Core, err error) {
+	resp, err = uc.bookData.SelectBookById(id)
+	return resp, err
+}

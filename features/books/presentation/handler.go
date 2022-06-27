@@ -45,14 +45,7 @@ func (h *BookHandler) PostNewBook(c echo.Context) error {
 			"message": "invalid token",
 		})
 	}
-	id := c.Param("id")
-	idUser, errId := strconv.Atoi(id)
-	if errId != nil {
-		return c.JSON(http.StatusBadRequest, map[string]interface{}{
-			"message": "failed to recognized ID",
-		})
-	}
-	if idToken != idUser {
+	if idToken == 0 {
 		return c.JSON(http.StatusUnauthorized, map[string]interface{}{
 			"message": "unauthorized",
 		})
@@ -106,5 +99,25 @@ func (h *BookHandler) PostNewBook(c echo.Context) error {
 	}
 	return c.JSON(http.StatusOK, map[string]interface{}{
 		"message": "success to insert book",
+	})
+}
+
+func (h *BookHandler) GetBookById(c echo.Context) error {
+	id := c.Param("id")
+	idBook, errId := strconv.Atoi(id)
+	if errId != nil {
+		return c.JSON(http.StatusBadRequest, map[string]interface{}{
+			"message": "failed to recognized ID",
+		})
+	}
+	result, err := h.bookBusiness.GetBookById(idBook)
+	if err != nil {
+		return c.JSON(http.StatusBadRequest, map[string]interface{}{
+			"message": "failed to get data",
+		})
+	}
+	return c.JSON(http.StatusOK, map[string]interface{}{
+		"message": "success",
+		"data":    _responseBook.FromCore(result),
 	})
 }
