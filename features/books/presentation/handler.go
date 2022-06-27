@@ -4,6 +4,7 @@ import (
 	"altaproject/features/books"
 	_requestBook "altaproject/features/books/presentation/request"
 	_responseBook "altaproject/features/books/presentation/response"
+	"altaproject/middlewares"
 	"net/http"
 	"strconv"
 
@@ -21,7 +22,6 @@ func NewBookHandler(business books.Business) *BookHandler {
 }
 
 func (h *BookHandler) GetAllBook(c echo.Context) error {
-	//param, query param, binding
 	limit := c.QueryParam("limit")
 	offset := c.QueryParam("offset")
 	limitint, _ := strconv.Atoi(limit)
@@ -39,6 +39,24 @@ func (h *BookHandler) GetAllBook(c echo.Context) error {
 }
 
 func (h *BookHandler) PostNewBook(c echo.Context) error {
+	idToken, errToken := middlewares.ExtractToken(c)
+	if errToken != nil {
+		c.JSON(http.StatusBadRequest, map[string]interface{}{
+			"message": "invalid token",
+		})
+	}
+	id := c.Param("id")
+	idUser, errId := strconv.Atoi(id)
+	if errId != nil {
+		return c.JSON(http.StatusBadRequest, map[string]interface{}{
+			"message": "failed to recognized ID",
+		})
+	}
+	if idToken != idUser {
+		return c.JSON(http.StatusUnauthorized, map[string]interface{}{
+			"message": "unauthorized",
+		})
+	}
 	title := c.FormValue("title")
 	author := c.FormValue("author")
 	publisher := c.FormValue("publisher")
