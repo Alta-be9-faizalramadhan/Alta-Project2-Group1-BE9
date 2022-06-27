@@ -37,3 +37,12 @@ func (repo *mysqlBookRepository) InsertNewBook(input books.Core) (row int, err e
 	}
 	return int(result.RowsAffected), nil
 }
+
+func (repo *mysqlBookRepository) SelectBookById(id int) (data books.Core, err error) {
+	var profile Book
+	result := repo.db.Model(&Book{}).Preload("User").First(&profile, "id = ?", id)
+	if result.Error != nil {
+		return books.Core{}, result.Error
+	}
+	return profile.toCore(), nil
+}
