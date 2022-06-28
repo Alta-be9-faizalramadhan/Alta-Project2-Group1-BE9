@@ -61,8 +61,6 @@ func (h *BookHandler) PostNewBook(c echo.Context) error {
 	stock := c.FormValue("stock")
 	stockInt, _ := strconv.Atoi(stock)
 	bookPage := c.FormValue("book_page")
-	userId := c.FormValue("user_id")
-	userIdInt, _ := strconv.Atoi(userId)
 
 	var newBook = _requestBook.Book{
 		Title:       title,
@@ -75,7 +73,7 @@ func (h *BookHandler) PostNewBook(c echo.Context) error {
 		Stock:       uint(stockInt),
 		Sold:        0,
 		BookPage:    bookPage,
-		UserId:      userIdInt,
+		UserId:      idToken,
 	}
 
 	dataUser := _requestBook.ToCore(newBook)
@@ -116,6 +114,18 @@ func (h *BookHandler) GetBookById(c echo.Context) error {
 }
 
 func (h *BookHandler) UpdatedBook(c echo.Context) error {
+	idToken, errToken := middlewares.ExtractToken(c)
+	if errToken != nil {
+		c.JSON(http.StatusBadRequest, map[string]interface{}{
+			"message": "invalid token",
+		})
+	}
+	if idToken == 0 {
+		return c.JSON(http.StatusUnauthorized, map[string]interface{}{
+			"message": "unauthorized",
+		})
+	}
+
 	id := c.Param("id")
 	idBook, errId := strconv.Atoi(id)
 	if errId != nil {
@@ -135,8 +145,6 @@ func (h *BookHandler) UpdatedBook(c echo.Context) error {
 	stock := c.FormValue("stock")
 	stockInt, _ := strconv.Atoi(stock)
 	bookPage := c.FormValue("book_page")
-	userId := c.FormValue("user_id")
-	userIdInt, _ := strconv.Atoi(userId)
 	sold := c.FormValue("sold")
 	soldInt, _ := strconv.Atoi(sold)
 
@@ -151,7 +159,7 @@ func (h *BookHandler) UpdatedBook(c echo.Context) error {
 		Stock:       uint(stockInt),
 		Sold:        uint(soldInt),
 		BookPage:    bookPage,
-		UserId:      userIdInt,
+		UserId:      idToken,
 	}
 
 	result, err := h.bookBusiness.UpdatedBook(idBook, _requestBook.ToCore(book))
@@ -171,6 +179,17 @@ func (h *BookHandler) UpdatedBook(c echo.Context) error {
 }
 
 func (h *BookHandler) DeleteBookById(c echo.Context) error {
+	idToken, errToken := middlewares.ExtractToken(c)
+	if errToken != nil {
+		c.JSON(http.StatusBadRequest, map[string]interface{}{
+			"message": "invalid token",
+		})
+	}
+	if idToken == 0 {
+		return c.JSON(http.StatusUnauthorized, map[string]interface{}{
+			"message": "unauthorized",
+		})
+	}
 	id := c.Param("id")
 	idBook, errId := strconv.Atoi(id)
 	if errId != nil {
