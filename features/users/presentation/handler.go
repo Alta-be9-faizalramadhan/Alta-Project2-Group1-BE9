@@ -57,12 +57,25 @@ func (h *UserHandler) GetAll(c echo.Context) error {
 }
 
 func (h *UserHandler) AddUser(c echo.Context) error {
-	var newUser _requestUser.User
-	errBind := c.Bind(&newUser)
-	if errBind != nil {
-		return c.JSON(http.StatusBadRequest, map[string]interface{}{
-			"message": "failed to bind data, check your input",
-		})
+	// var newUser _requestUser.User
+	// errBind := c.Bind(&newUser)
+	// if errBind != nil {
+	// 	return c.JSON(http.StatusBadRequest, map[string]interface{}{
+	// 		"message": "failed to bind data, check your input",
+	// 	})
+	// }
+	username := c.FormValue("username")
+	email := c.FormValue("email")
+	password := c.FormValue("password")
+	alamat := c.FormValue("alamat")
+	notelp := c.FormValue("notelp")
+
+	var newUser = _requestUser.User{
+		UserName: username,
+		Email:    email,
+		Password: password,
+		Alamat:   alamat,
+		NoTelp:   notelp,
 	}
 	dataUser := _requestUser.ToCore(newUser)
 	row, err := h.userBusiness.InsertData(dataUser)
@@ -101,13 +114,20 @@ func (h *UserHandler) PutData(c echo.Context) error {
 			"message": "unauthorized",
 		})
 	}
-	var user _requestUser.User
-	errBind := c.Bind(&user)
-	if errBind != nil {
-		return c.JSON(http.StatusBadRequest, map[string]interface{}{
-			"message": "failed to bind data",
-		})
+	username := c.FormValue("username")
+	email := c.FormValue("email")
+	password := c.FormValue("password")
+	alamat := c.FormValue("alamat")
+	notelp := c.FormValue("notelp")
+
+	var user = _requestUser.User{
+		UserName: username,
+		Email:    email,
+		Password: password,
+		Alamat:   alamat,
+		NoTelp:   notelp,
 	}
+
 	result, err := h.userBusiness.UpdateData(idUser, _requestUser.ToCore(user))
 	if err != nil {
 		return c.JSON(http.StatusBadRequest, map[string]interface{}{
