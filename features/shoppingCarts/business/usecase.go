@@ -18,3 +18,8 @@ func (uc *shoppingCartUsecase) GetHistoryOrder(id int, limit int, offset int) (r
 	resp, err = uc.shoppingCartData.SelectAllOrder(id, limit, offset)
 	return resp, err
 }
+
+func (uc *shoppingCartUsecase) CreateNewCart(data shoppingcarts.Core) (row int, err error) {
+	row, err = uc.shoppingCartData.InsertNewCart(data)
+	return row, err
+}

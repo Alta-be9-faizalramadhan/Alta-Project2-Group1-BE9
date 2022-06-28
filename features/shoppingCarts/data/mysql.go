@@ -2,6 +2,7 @@ package data
 
 import (
 	shoppingcarts "altaproject/features/shoppingCarts"
+	"fmt"
 
 	"gorm.io/gorm"
 )
@@ -23,4 +24,16 @@ func (repo *mysqlShoppingCartRepository) SelectAllOrder(id int, limit int, offse
 		return []shoppingcarts.Core{}, result.Error
 	}
 	return toCoreList(dataShoppingCart), nil
+}
+
+func (repo *mysqlShoppingCartRepository) InsertNewCart(data shoppingcarts.Core) (int, error) {
+	cart := fromCore(data)
+	result := repo.db.Create(&cart)
+	if result.Error != nil {
+		return 0, result.Error
+	}
+	if result.RowsAffected != 1 {
+		return 0, fmt.Errorf("failed to insert data")
+	}
+	return int(result.RowsAffected), nil
 }
