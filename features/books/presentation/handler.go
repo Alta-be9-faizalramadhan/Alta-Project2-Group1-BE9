@@ -137,6 +137,8 @@ func (h *BookHandler) UpdatedBook(c echo.Context) error {
 	bookPage := c.FormValue("book_page")
 	userId := c.FormValue("user_id")
 	userIdInt, _ := strconv.Atoi(userId)
+	sold := c.FormValue("sold")
+	soldInt, _ := strconv.Atoi(sold)
 
 	var book = _requestBook.Book{
 		Title:       title,
@@ -147,7 +149,7 @@ func (h *BookHandler) UpdatedBook(c echo.Context) error {
 		Description: description,
 		Price:       uint(priceInt),
 		Stock:       uint(stockInt),
-		Sold:        0,
+		Sold:        uint(soldInt),
 		BookPage:    bookPage,
 		UserId:      userIdInt,
 	}
