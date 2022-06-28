@@ -23,3 +23,8 @@ func (uc *shoppingCartUsecase) CreateNewCart(data shoppingcarts.Core) (row int, 
 	row, err = uc.shoppingCartData.InsertNewCart(data)
 	return row, err
 }
+
+func (uc *shoppingCartUsecase) UpdatedStatusCart(id int, status string) (row int, err error) {
+	row, err = uc.shoppingCartData.UpdatedStatusCart(id, status)
+	return row, err
+}

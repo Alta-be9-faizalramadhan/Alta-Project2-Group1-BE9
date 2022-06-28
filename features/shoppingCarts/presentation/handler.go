@@ -4,6 +4,7 @@ import (
 	shoppingcarts "altaproject/features/shoppingCarts"
 	_requestShoppingCart "altaproject/features/shoppingCarts/presentation/request"
 	_responseShoppingCart "altaproject/features/shoppingCarts/presentation/response"
+	"altaproject/middlewares"
 	"net/http"
 	"strconv"
 
@@ -38,6 +39,11 @@ func (h *ShoppingCartHandler) GetAllHistoryOrder(c echo.Context) error {
 			"message": "failed to get all data",
 		})
 	}
+	if result == nil {
+		return c.JSON(http.StatusBadRequest, map[string]interface{}{
+			"message": "data not found",
+		})
+	}
 	return c.JSON(http.StatusOK, map[string]interface{}{
 		"message": "success",
 		"data":    _responseShoppingCart.FromCoreList(result),
@@ -65,5 +71,33 @@ func (h *ShoppingCartHandler) AddCart(c echo.Context) error {
 	}
 	return c.JSON(http.StatusOK, map[string]interface{}{
 		"message": "success insert to cart",
+	})
+}
+
+func (h *ShoppingCartHandler) UpdatedStatusCart(c echo.Context) error {
+	idToken, errToken := middlewares.ExtractToken(c)
+	if errToken != nil {
+		c.JSON(http.StatusBadRequest, map[string]interface{}{
+			"message": "invalid token",
+		})
+	}
+	if idToken == 0 {
+		return c.JSON(http.StatusUnauthorized, map[string]interface{}{
+			"message": "unauthorized",
+		})
+	}
+	result, err := h.shoppingCartBusiness.UpdatedStatusCart(idToken, "Done")
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, map[string]interface{}{
+			"message": "failed to updated status",
+		})
+	}
+	if result == 0 {
+		return c.JSON(http.StatusInternalServerError, map[string]interface{}{
+			"message": "failed to updated status",
+		})
+	}
+	return c.JSON(http.StatusOK, map[string]interface{}{
+		"message": "success updated status",
 	})
 }
