@@ -2,6 +2,7 @@ package presentation
 
 import (
 	shoppingcarts "altaproject/features/shoppingCarts"
+	_requestShoppingCart "altaproject/features/shoppingCarts/presentation/request"
 	_responseShoppingCart "altaproject/features/shoppingCarts/presentation/response"
 	"net/http"
 	"strconv"
@@ -40,5 +41,29 @@ func (h *ShoppingCartHandler) GetAllHistoryOrder(c echo.Context) error {
 	return c.JSON(http.StatusOK, map[string]interface{}{
 		"message": "success",
 		"data":    _responseShoppingCart.FromCoreList(result),
+	})
+}
+
+func (h *ShoppingCartHandler) AddCart(c echo.Context) error {
+	var cart _requestShoppingCart.ShoppingCart
+	errBind := c.Bind(&cart)
+	if errBind != nil {
+		return c.JSON(http.StatusInternalServerError, map[string]interface{}{
+			"message": "failed to bind data",
+		})
+	}
+	result, err := h.shoppingCartBusiness.CreateNewCart(_requestShoppingCart.ToCore(cart))
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, map[string]interface{}{
+			"message": "failed to insert data",
+		})
+	}
+	if result == 0 {
+		return c.JSON(http.StatusInternalServerError, map[string]interface{}{
+			"message": "failed to insert data",
+		})
+	}
+	return c.JSON(http.StatusOK, map[string]interface{}{
+		"message": "success insert to cart",
 	})
 }

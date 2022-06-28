@@ -15,8 +15,10 @@ type User struct {
 
 type Business interface {
 	GetHistoryOrder(id int, limit int, offset int) (data []Core, err error)
+	CreateNewCart(data Core) (row int, err error)
 }
 
 type Data interface {
 	SelectAllOrder(id int, limit int, offset int) (data []Core, err error)
+	InsertNewCart(data Core) (row int, err error)
 }
