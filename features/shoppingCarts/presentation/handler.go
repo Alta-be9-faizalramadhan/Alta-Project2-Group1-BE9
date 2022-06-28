@@ -64,6 +64,6 @@ func (h *ShoppingCartHandler) AddCart(c echo.Context) error {
 		})
 	}
 	return c.JSON(http.StatusOK, map[string]interface{}{
-		"message": "success to insert book",
+		"message": "success insert to cart",
 	})
 }
