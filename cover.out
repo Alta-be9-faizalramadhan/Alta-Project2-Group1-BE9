@@ -1,0 +1,21 @@
+mode: set
+altaproject/features/books/business/usecase.go:12.56,16.2 1 1
+altaproject/features/books/business/usecase.go:18.86,21.2 2 1
+altaproject/features/books/business/usecase.go:23.77,24.132 1 1
+altaproject/features/books/business/usecase.go:27.2,28.17 2 1
+altaproject/features/books/business/usecase.go:24.132,26.3 1 1
+altaproject/features/books/business/usecase.go:31.73,34.2 2 1
+altaproject/features/books/business/usecase.go:36.82,39.2 2 1
+altaproject/features/books/business/usecase.go:41.68,44.2 2 1
+altaproject/features/books/business/usecase.go:46.93,49.2 2 1
+altaproject/features/users/business/usecase.go:12.57,16.2 1 1
+altaproject/features/users/business/usecase.go:18.85,22.2 3 1
+altaproject/features/users/business/usecase.go:24.74,25.115 1 1
+altaproject/features/users/business/usecase.go:28.2,29.17 2 1
+altaproject/features/users/business/usecase.go:25.115,27.3 1 1
+altaproject/features/users/business/usecase.go:32.81,33.110 1 1
+altaproject/features/users/business/usecase.go:36.2,37.17 2 1
+altaproject/features/users/business/usecase.go:33.110,35.3 1 1
+altaproject/features/users/business/usecase.go:40.73,43.2 2 1
+altaproject/features/users/business/usecase.go:45.64,48.2 2 1
+altaproject/features/users/business/usecase.go:50.108,53.2 2 1
