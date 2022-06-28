@@ -78,13 +78,6 @@ func (h *BookHandler) PostNewBook(c echo.Context) error {
 		UserId:      userIdInt,
 	}
 
-	// errBind := c.Bind(&newBook)
-	// if errBind != nil {
-	// 	return c.JSON(http.StatusBadRequest, map[string]interface{}{
-	// 		"message": "failed to bind data, check your input",
-	// 	})
-	// }
-
 	dataUser := _requestBook.ToCore(newBook)
 	row, err := h.bookBusiness.CreateNewBook(dataUser)
 	if row == -1 {
@@ -130,13 +123,35 @@ func (h *BookHandler) UpdatedBook(c echo.Context) error {
 			"message": "failed to recognized ID",
 		})
 	}
-	var book _requestBook.Book
-	errBind := c.Bind(&book)
-	if errBind != nil {
-		return c.JSON(http.StatusBadRequest, map[string]interface{}{
-			"message": "failed to bind data",
-		})
+
+	title := c.FormValue("title")
+	author := c.FormValue("author")
+	publisher := c.FormValue("publisher")
+	isbn := c.FormValue("isbn")
+	category := c.FormValue("category")
+	description := c.FormValue("description")
+	price := c.FormValue("price")
+	priceInt, _ := strconv.Atoi(price)
+	stock := c.FormValue("stock")
+	stockInt, _ := strconv.Atoi(stock)
+	bookPage := c.FormValue("book_page")
+	userId := c.FormValue("user_id")
+	userIdInt, _ := strconv.Atoi(userId)
+
+	var book = _requestBook.Book{
+		Title:       title,
+		Author:      author,
+		Publisher:   publisher,
+		ISBN:        isbn,
+		Category:    category,
+		Description: description,
+		Price:       uint(priceInt),
+		Stock:       uint(stockInt),
+		Sold:        0,
+		BookPage:    bookPage,
+		UserId:      userIdInt,
 	}
+
 	result, err := h.bookBusiness.UpdatedBook(idBook, _requestBook.ToCore(book))
 	if err != nil {
 		return c.JSON(http.StatusBadRequest, map[string]interface{}{
