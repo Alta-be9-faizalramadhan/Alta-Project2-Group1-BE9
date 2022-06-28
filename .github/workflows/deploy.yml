@@ -17,7 +17,7 @@ jobs:
           # port: ${{ secrets.PORT }}
           port: 22
           script: |
-            cd /home/zenseslaus/Alta-Project2-Group1-BE9
+            cd /home/Wen/Alta-Project2-Group1-BE9
             git pull origin main
             docker stop project2Container
             docker rm project2Container

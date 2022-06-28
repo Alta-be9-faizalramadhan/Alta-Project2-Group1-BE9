@@ -4,6 +4,9 @@ import (
 	_bookBusiness "altaproject/features/books/business"
 	_bookData "altaproject/features/books/data"
 	_bookPresentation "altaproject/features/books/presentation"
+	_shoppingCartBusiness "altaproject/features/shoppingCarts/business"
+	_shoppingCartData "altaproject/features/shoppingCarts/data"
+	_shoppingCartPresentation "altaproject/features/shoppingCarts/presentation"
 	_userBusiness "altaproject/features/users/business"
 	_userData "altaproject/features/users/data"
 	_userPresentation "altaproject/features/users/presentation"
@@ -12,8 +15,9 @@ import (
 )
 
 type Presenter struct {
-	UserPresenter *_userPresentation.UserHandler
-	BookPresenter *_bookPresentation.BookHandler
+	UserPresenter         *_userPresentation.UserHandler
+	BookPresenter         *_bookPresentation.BookHandler
+	ShoppingCartPresenter *_shoppingCartPresentation.ShoppingCartHandler
 }
 
 func InitFactory(dbConn *gorm.DB) Presenter {
@@ -25,8 +29,13 @@ func InitFactory(dbConn *gorm.DB) Presenter {
 	bookBusiness := _bookBusiness.NewBookBusiness(bookData)
 	bookPresentation := _bookPresentation.NewBookHandler(bookBusiness)
 
+	shoppingCartData := _shoppingCartData.NewShoppingCartRepository(dbConn)
+	shoppingCartBusiness := _shoppingCartBusiness.NewShoppingCartBusiness(shoppingCartData)
+	shoppingCartPresentation := _shoppingCartPresentation.NewShoppingCartHandler(shoppingCartBusiness)
+
 	return Presenter{
-		UserPresenter: userPresentation,
-		BookPresenter: bookPresentation,
+		UserPresenter:         userPresentation,
+		BookPresenter:         bookPresentation,
+		ShoppingCartPresenter: shoppingCartPresentation,
 	}
 }

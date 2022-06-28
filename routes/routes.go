@@ -31,5 +31,7 @@ func New(presenter factory.Presenter) *echo.Echo {
 	e.PUT("books/:id", presenter.BookPresenter.UpdatedBook, middlewares.JWTMiddleware())
 	e.DELETE("books/:id", presenter.BookPresenter.DeleteBookById, middlewares.JWTMiddleware())
 
+	e.GET("orders/:id", presenter.ShoppingCartPresenter.GetAllHistoryOrder)
+
 	return e
 }
