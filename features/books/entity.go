@@ -33,6 +33,7 @@ type Business interface {
 	UpdatedBook(id int, data Core) (row int, err error)
 	SoftDeleteBook(id int) (row int, err error)
 	SelectBookByCategory(category string) (data []Core, err error)
+	SelectBookByUserId(id int) (data []Core, err error)
 }
 
 type Data interface {
@@ -42,4 +43,5 @@ type Data interface {
 	UpdatedBook(id int, data Core) (row int, err error)
 	SoftDeleteBook(id int) (row int, err error)
 	SelectBookByCategory(category string) (data []Core, err error)
+	SelectBookByUserId(id int) (data []Core, err error)
 }

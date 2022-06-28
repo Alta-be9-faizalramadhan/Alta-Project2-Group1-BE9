@@ -47,3 +47,8 @@ func (uc *bookUsecase) SelectBookByCategory(category string) (resp []books.Core,
 	resp, err = uc.bookData.SelectBookByCategory(category)
 	return resp, err
 }
+
+func (uc *bookUsecase) SelectBookByUserId(id int) (resp []books.Core, err error) {
+	resp, err = uc.bookData.SelectBookByUserId(id)
+	return resp, err
+}

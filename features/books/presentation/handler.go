@@ -226,3 +226,18 @@ func (h *BookHandler) GetBookByCategory(c echo.Context) error {
 		"data":    _responseBook.FromCoreList(result),
 	})
 }
+
+func (h *BookHandler) GetBookByUserId(c echo.Context) error {
+	idToken, _ := middlewares.ExtractToken(c)
+	user_id := idToken
+	result, err := h.bookBusiness.SelectBookByUserId(user_id)
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, map[string]interface{}{
+			"message": "failed to get all data",
+		})
+	}
+	return c.JSON(http.StatusOK, map[string]interface{}{
+		"message": "success",
+		"data":    _responseBook.FromCoreList(result),
+	})
+}
