@@ -40,6 +40,12 @@ func (mock mockBookData) SelectBookByCategory(category string) (resp []books.Cor
 	}, nil
 }
 
+// func (mock mockBookData) SelectBookByUserId(id int) (resp []books.Core, err error) {
+// 	return []books.Core{
+// 		{ID: 1, Title: "Kamus", Author: "Qodir", Publisher: "Gramedia", ISBN: "43215ISBN", Category: "TextBook", Price: 20000, Stock: 5, BookPage: "100", Sold: 0, Description: "Buku baru keluar", User: books.User{ID: 1, UserName: "Aldi"}},
+// 	}, nil
+// }
+
 type mockBookDataFailed struct{}
 
 func (mock mockBookDataFailed) SelectAllBook(limit, offset uint) (data []books.Core, err error) {
@@ -65,6 +71,10 @@ func (mock mockBookDataFailed) SoftDeleteBook(id int) (row int, err error) {
 func (mock mockBookDataFailed) SelectBookByCategory(category string) (resp []books.Core, err error) {
 	return nil, fmt.Errorf("Failed to select data")
 }
+
+// func (mock mockBookDataFailed) SelectBookByUserId(id int) (resp []books.Core, err error) {
+// 	return nil, fmt.Errorf("Failed to select data")
+// }
 
 func TestGetAllBook(t *testing.T) {
 	t.Run("Test Get All Book Success", func(t *testing.T) {

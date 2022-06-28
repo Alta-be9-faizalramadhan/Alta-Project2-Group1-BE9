@@ -78,3 +78,12 @@ func (repo *mysqlBookRepository) SelectBookByCategory(category string) (response
 	}
 	return toCoreList(dataBooks), nil
 }
+
+func (repo *mysqlBookRepository) SelectBookByUserId(id int) (response []books.Core, err error) {
+	var dataBooks []Book
+	result := repo.db.Preload("User").Where("user_id = ?", id).Find(&dataBooks)
+	if result.Error != nil {
+		return []books.Core{}, result.Error
+	}
+	return toCoreList(dataBooks), nil
+}
