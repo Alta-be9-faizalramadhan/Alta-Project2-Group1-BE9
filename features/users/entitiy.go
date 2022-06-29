@@ -11,6 +11,7 @@ type Core struct {
 	Password  string
 	Alamat    string
 	NoTelp    string
+	ImageURL  string
 	CreatedAt time.Time
 	UpdatedAt time.Time
 }

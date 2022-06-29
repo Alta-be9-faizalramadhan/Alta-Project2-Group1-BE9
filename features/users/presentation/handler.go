@@ -5,10 +5,15 @@ import (
 	_requestUser "altaproject/features/users/presentation/request"
 	_responseUser "altaproject/features/users/presentation/response"
 	"altaproject/middlewares"
+	"io"
 	"net/http"
+	"net/url"
 	"strconv"
 
+	"cloud.google.com/go/storage"
 	"github.com/labstack/echo/v4"
+	"google.golang.org/api/option"
+	"google.golang.org/appengine"
 )
 
 type UserHandler struct {
@@ -57,26 +62,68 @@ func (h *UserHandler) GetAll(c echo.Context) error {
 }
 
 func (h *UserHandler) AddUser(c echo.Context) error {
-	// var newUser _requestUser.User
-	// errBind := c.Bind(&newUser)
-	// if errBind != nil {
-	// 	return c.JSON(http.StatusBadRequest, map[string]interface{}{
-	// 		"message": "failed to bind data, check your input",
-	// 	})
-	// }
 	username := c.FormValue("username")
 	email := c.FormValue("email")
 	password := c.FormValue("password")
 	alamat := c.FormValue("alamat")
 	notelp := c.FormValue("notelp")
 
+	var storageClient *storage.Client
+	bucket := "bucket-project-2"
+	ctx := appengine.NewContext(c.Request())
+	storageClient, err := storage.NewClient(ctx, option.WithCredentialsFile("keys.json"))
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, map[string]interface{}{
+			"message": "Gagal",
+		})
+	}
+	file, err := c.FormFile("file")
+	if err != nil {
+		return err
+	}
+	if file.Size > 1024*1024 {
+		return c.JSON(http.StatusBadRequest, map[string]interface{}{
+			"message": "The uploaded image is too big. Please use an image less than 1MB in size",
+		})
+	}
+	src, err := file.Open()
+	if err != nil {
+		return err
+	}
+	defer src.Close()
+	if file.Filename[len(file.Filename)-3:] != "jpg" && file.Filename[len(file.Filename)-3:] != "png" {
+		if file.Filename[len(file.Filename)-4:] != "jpeg" {
+			return c.JSON(http.StatusBadRequest, map[string]interface{}{
+				"message": "The provided file format is not allowed. Please upload a JPG or JPEG or PNG image",
+			})
+		}
+	}
+
+	sw := storageClient.Bucket(bucket).Object(file.Filename).NewWriter(ctx)
+
+	if _, err := io.Copy(sw, src); err != nil {
+		return c.JSON(http.StatusInternalServerError, map[string]interface{}{
+			"message": err,
+		})
+	}
+	if err := sw.Close(); err != nil {
+		return c.JSON(http.StatusInternalServerError, map[string]interface{}{
+			"message": err,
+		})
+	}
+	u, err := url.Parse("https://storage.googleapis.com/" + bucket + "/" + sw.Attrs().Name)
+	if err != nil {
+		return err
+	}
 	var newUser = _requestUser.User{
 		UserName: username,
 		Email:    email,
 		Password: password,
 		Alamat:   alamat,
 		NoTelp:   notelp,
+		ImageURL: u.String(),
 	}
+
 	dataUser := _requestUser.ToCore(newUser)
 	row, err := h.userBusiness.InsertData(dataUser)
 	if row == -1 {

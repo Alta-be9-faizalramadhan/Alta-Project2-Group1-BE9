@@ -7,10 +7,11 @@ import (
 
 type User struct {
 	ID        int       `json:"id"`
-	UserName  string    `json:"name"`
+	UserName  string    `json:"user_name"`
 	Email     string    `json:"email"`
 	Alamat    string    `json:"alamat"`
 	NoTelp    string    `json:"notelp"`
+	ImageURL  string    `json:"image_url"`
 	CreatedAt time.Time `json:"created_at"`
 }
 
@@ -21,6 +22,7 @@ func FromCore(data users.Core) User {
 		Email:     data.Email,
 		Alamat:    data.Alamat,
 		NoTelp:    data.NoTelp,
+		ImageURL:  data.ImageURL,
 		CreatedAt: data.CreatedAt,
 	}
 }
