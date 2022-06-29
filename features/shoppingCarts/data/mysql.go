@@ -21,7 +21,7 @@ func (repo *mysqlShoppingCartRepository) SelectAllOrder(id int, limit int, offse
 	var dataShoppingCart []ShoppingCart
 	result := repo.db.Preload("User").Where("user_id = ? ", id).Not("status = ?", "wish list").Limit(limit).Offset(offset).Find(&dataShoppingCart)
 	if result.Error != nil {
-		return []shoppingcarts.Core{}, result.Error
+		return nil, result.Error
 	}
 	return toCoreList(dataShoppingCart), nil
 }
@@ -34,6 +34,17 @@ func (repo *mysqlShoppingCartRepository) InsertNewCart(data shoppingcarts.Core) 
 	}
 	if result.RowsAffected != 1 {
 		return 0, fmt.Errorf("failed to insert data")
+	}
+	return int(result.RowsAffected), nil
+}
+
+func (repo *mysqlShoppingCartRepository) UpdatedStatusCart(id int, status string) (int, error) {
+	result := repo.db.Model(&ShoppingCart{}).Where("status = ? AND user_id = ?", "Wish List", id).First(&ShoppingCart{}).Update("status", "Done")
+	if result.Error != nil {
+		return 0, result.Error
+	}
+	if result.RowsAffected != 1 {
+		return 0, fmt.Errorf("failed to update status")
 	}
 	return int(result.RowsAffected), nil
 }
