@@ -48,3 +48,24 @@ func (repo *mysqlShoppingCartRepository) UpdatedStatusCart(id int, status string
 	}
 	return int(result.RowsAffected), nil
 }
+
+func (repo *mysqlShoppingCartRepository) UpdatedCart(id int, data shoppingcarts.Core) (int, error) {
+	var dataShoppingCart = fromCore(data)
+	result := repo.db.Model(&ShoppingCart{}).Where("status = ? AND user_id = ?", "Wish List", id).Updates(&dataShoppingCart)
+	if result.Error != nil {
+		return 0, result.Error
+	}
+	if result.RowsAffected != 1 {
+		return 0, fmt.Errorf("failed to update cart")
+	}
+	return int(result.RowsAffected), nil
+}
+
+func (repo *mysqlShoppingCartRepository) IsCartExist(id int) (bool, int, int) {
+	var dataShoppingCart ShoppingCart
+	result := repo.db.Model(&ShoppingCart{}).Where("status = ? AND user_id = ?", "Wish List", id).First(&dataShoppingCart)
+	if result.RowsAffected == 0 {
+		return true, 0, 0
+	}
+	return false, int(dataShoppingCart.TotalQuantity), int(dataShoppingCart.TotalPrice)
+}
