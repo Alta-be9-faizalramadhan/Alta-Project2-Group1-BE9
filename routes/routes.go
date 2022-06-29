@@ -16,7 +16,7 @@ func New(presenter factory.Presenter) *echo.Echo {
 		AllowHeaders: []string{echo.HeaderOrigin, echo.HeaderContentType, echo.HeaderAccept, echo.HeaderAuthorization},
 		AllowMethods: []string{echo.GET, echo.POST, echo.PUT, echo.DELETE},
 	}))
-
+	e.Pre(middleware.RemoveTrailingSlash())
 	e.GET("users", presenter.UserPresenter.GetAll, middlewares.JWTMiddleware())
 	e.GET("users/:id", presenter.UserPresenter.GetUser, middlewares.JWTMiddleware())
 	e.POST("users", presenter.UserPresenter.AddUser)
