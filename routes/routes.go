@@ -38,6 +38,7 @@ func New(presenter factory.Presenter) *echo.Echo {
 	e.GET("orders/:id", presenter.ShoppingCartPresenter.GetAllHistoryOrder, middlewares.JWTMiddleware())
 
 	e.GET("orderdetails/:id", presenter.ShoppingCartDetailPresenter.GetAllCartDetails)
+	e.POST("orderdetails", presenter.ShoppingCartDetailPresenter.InsertCartDetails)
 
 	return e
 }

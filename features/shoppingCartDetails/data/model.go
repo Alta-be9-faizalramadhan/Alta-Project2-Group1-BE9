@@ -13,7 +13,7 @@ type ShoppingCartDetail struct {
 	QuantityBuyBook uint `json:"quantity_buy_book" form:"quantity_buy_book"`
 	TotalPriceBook  uint `json:"total_price_book" form:"total_price_book"`
 	BookID          int  `json:"book_id" form:"book_id"`
-	ShoppingCartID  int  `json:"shoppingcart_id" form:"shoppingcart_id"`
+	ShoppingCartID  int  `json:"shopping_cart_id" form:"shopping_cart_id"`
 }
 
 type Book struct {
@@ -25,6 +25,7 @@ type Book struct {
 
 type ShoppingCart struct {
 	gorm.Model
+	UserID             uint `form:"user_id"`
 	ShoppingCartDetail []ShoppingCartDetail
 }
 
@@ -41,7 +42,8 @@ func (data *ShoppingCartDetail) toCore() shoppingcartdetails.Core {
 			Price: uint(data.Book.Price),
 		},
 		ShoppingCart: shoppingcartdetails.ShoppingCart{
-			ID: int(data.ShoppingCart.ID),
+			ID:     int(data.ShoppingCart.ID),
+			UserID: data.ShoppingCart.UserID,
 		},
 	}
 }
