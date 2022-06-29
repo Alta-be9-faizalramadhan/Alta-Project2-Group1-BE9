@@ -2,7 +2,7 @@ package config
 
 import (
 	_mBooks "altaproject/features/books/data"
-	_mCategorys "altaproject/features/categorys/data"
+	_mCategorys "altaproject/features/categories/data"
 	_mShoppingCartDetails "altaproject/features/shoppingCartDetails/data"
 	_mShoppingCarts "altaproject/features/shoppingCarts/data"
 	_mUsers "altaproject/features/users/data"

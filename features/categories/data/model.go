@@ -1,7 +1,7 @@
 package data
 
 import (
-	category "altaproject/features/categorys"
+	category "altaproject/features/categories"
 
 	"gorm.io/gorm"
 )

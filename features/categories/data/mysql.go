@@ -1,7 +1,7 @@
 package data
 
 import (
-	category "altaproject/features/categorys"
+	category "altaproject/features/categories"
 
 	"gorm.io/gorm"
 )
@@ -18,7 +18,7 @@ func NewCategoryRepository(conn *gorm.DB) category.Data {
 
 func (repo *mysqlCategoryRepository) SelectAllCategory() ([]category.Core, error) {
 	var dataCategorys []Category
-	result := repo.db.Find(&dataCategorys)
+	result := repo.db.Order("name asc").Find(&dataCategorys)
 	if result.Error != nil {
 		return nil, result.Error
 	}

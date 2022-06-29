@@ -1,8 +1,8 @@
 package presentation
 
 import (
-	category "altaproject/features/categorys"
-	_responseCategory "altaproject/features/categorys/presentation/response"
+	category "altaproject/features/categories"
+	_responseCategory "altaproject/features/categories/presentation/response"
 	"net/http"
 
 	"github.com/labstack/echo/v4"

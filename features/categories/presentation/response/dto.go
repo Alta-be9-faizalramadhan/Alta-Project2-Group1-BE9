@@ -1,6 +1,6 @@
 package response
 
-import category "altaproject/features/categorys"
+import category "altaproject/features/categories"
 
 type Category struct {
 	Name string `json:"name" form:"name"`

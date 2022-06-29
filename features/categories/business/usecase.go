@@ -1,6 +1,6 @@
 package business
 
-import category "altaproject/features/categorys"
+import category "altaproject/features/categories"
 
 type categoryUsecase struct {
 	categoryData category.Data
