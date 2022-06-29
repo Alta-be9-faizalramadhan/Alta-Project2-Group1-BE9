@@ -27,3 +27,8 @@ func (uc *shoppingCartDetailUseCase) InsertCartDetails(input shoppingcartdetails
 	row, err = uc.shoppingCartDetailData.InsertCartDetails(input)
 	return row, err
 }
+
+func (uc *shoppingCartDetailUseCase) DeleteCartDetails(id int) (row int, err error) {
+	row, errDel := uc.shoppingCartDetailData.DeleteCartDetails(id)
+	return row, errDel
+}
