@@ -37,3 +37,15 @@ func (repo *mysqlShoppingCartDetailRepository) InsertCartDetails(data shoppingca
 	}
 	return int(result.RowsAffected), nil
 }
+
+func (repo *mysqlShoppingCartDetailRepository) DeleteCartDetails(idCart int) (row int, err error) {
+	var dataDetailCart ShoppingCartDetail
+	result := repo.db.Delete(&dataDetailCart, "shopping_cart_id = ?", idCart)
+	if result.Error != nil {
+		return 0, result.Error
+	}
+	if result.RowsAffected != 1 {
+		return 0, fmt.Errorf("failed to delete shoppingcartdetails")
+	}
+	return int(result.RowsAffected), nil
+}

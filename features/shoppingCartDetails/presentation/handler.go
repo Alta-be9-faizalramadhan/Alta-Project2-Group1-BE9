@@ -77,3 +77,22 @@ func (h *ShoppingCartDetailHandler) InsertCartDetails(c echo.Context) error {
 		"message": "success to insert data",
 	})
 }
+
+func (h *ShoppingCartDetailHandler) DeleteCartDetails(c echo.Context) error {
+	id := c.Param("id")
+	idHap, errHap := strconv.Atoi(id)
+	if errHap != nil {
+		return c.JSON(http.StatusBadRequest, map[string]interface{}{
+			"message": "id shoppingcart is not recognize",
+		})
+	}
+	_, err := h.shoppingCartDetailBusiness.DeleteCartDetails(idHap)
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, map[string]interface{}{
+			"message": "failed to delete shopping cart details",
+		})
+	}
+	return c.JSON(http.StatusOK, map[string]interface{}{
+		"message": "success to delete shopping cart details",
+	})
+}
