@@ -2,6 +2,7 @@ package business
 
 import (
 	shoppingcartdetails "altaproject/features/shoppingCartDetails"
+	"errors"
 )
 
 type shoppingCartDetailUseCase struct {
@@ -17,4 +18,12 @@ func NewShoppingCartDetailBusiness(scdData shoppingcartdetails.Data) shoppingcar
 func (uc *shoppingCartDetailUseCase) GetAllCartDetails(id, limit, offset int) (resp []shoppingcartdetails.Core, err error) {
 	resp, err = uc.shoppingCartDetailData.SelectAllCartDetails(id, limit, offset)
 	return resp, err
+}
+
+func (uc *shoppingCartDetailUseCase) InsertCartDetails(input shoppingcartdetails.Core) (row int, err error) {
+	if input.QuantityBuyBook == 0 || input.TotalPriceBook == 0 || input.Book.ID == 0 || input.ShoppingCart.ID == 0 {
+		return -1, errors.New("all input data must be filled")
+	}
+	row, err = uc.shoppingCartDetailData.InsertCartDetails(input)
+	return row, err
 }
