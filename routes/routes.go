@@ -37,10 +37,10 @@ func New(presenter factory.Presenter) *echo.Echo {
 
 	e.GET("orders/:id", presenter.ShoppingCartPresenter.GetAllHistoryOrder, middlewares.JWTMiddleware())
 
-	e.GET("orderdetails/:id", presenter.ShoppingCartDetailPresenter.GetAllCartDetails, middlewares.JWTMiddleware())
+	e.GET("orderdetails/:idcart", presenter.ShoppingCartDetailPresenter.GetAllCartDetails, middlewares.JWTMiddleware())
 	e.POST("orderdetails", presenter.ShoppingCartDetailPresenter.InsertCartDetails, middlewares.JWTMiddleware())
-	e.DELETE("orderdetails/:id", presenter.ShoppingCartDetailPresenter.DeleteCartDetails, middlewares.JWTMiddleware())
-	e.PUT("orderdetails/:id", presenter.ShoppingCartDetailPresenter.UpdateCartDetails, middlewares.JWTMiddleware())
+	e.DELETE("orderdetails/:idcart", presenter.ShoppingCartDetailPresenter.DeleteCartDetails, middlewares.JWTMiddleware())
+	e.PUT("orderdetails/:idcart", presenter.ShoppingCartDetailPresenter.UpdateCartDetails, middlewares.JWTMiddleware())
 
 	e.GET("categories", presenter.CategoryPresenter.GetAllCategory)
 	return e

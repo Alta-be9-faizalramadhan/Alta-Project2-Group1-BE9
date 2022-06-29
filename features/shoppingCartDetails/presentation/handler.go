@@ -21,7 +21,7 @@ func NewShoppingCartDetailHandler(business shoppingcartdetails.Business) *Shoppi
 }
 
 func (h *ShoppingCartDetailHandler) GetAllCartDetails(c echo.Context) error {
-	id := c.Param("id")
+	id := c.Param("idcart")
 	limit := c.QueryParam("limit")
 	offset := c.QueryParam("offset")
 	limitint, _ := strconv.Atoi(limit)
@@ -79,7 +79,7 @@ func (h *ShoppingCartDetailHandler) InsertCartDetails(c echo.Context) error {
 }
 
 func (h *ShoppingCartDetailHandler) DeleteCartDetails(c echo.Context) error {
-	id := c.Param("id")
+	id := c.Param("idcart")
 	idHap, errHap := strconv.Atoi(id)
 	if errHap != nil {
 		return c.JSON(http.StatusBadRequest, map[string]interface{}{
@@ -98,7 +98,7 @@ func (h *ShoppingCartDetailHandler) DeleteCartDetails(c echo.Context) error {
 }
 
 func (h *ShoppingCartDetailHandler) UpdateCartDetails(c echo.Context) error {
-	id := c.Param("id")
+	id := c.Param("idcart")
 	idPut, errPut := strconv.Atoi(id)
 	if errPut != nil {
 		return c.JSON(http.StatusBadRequest, map[string]interface{}{
