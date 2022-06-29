@@ -28,7 +28,7 @@ func TestGetAllBook(t *testing.T) {
 		assert.Equal(t, "Novel", result[0].Name)
 	})
 
-	t.Run("Test Get All Book Failed", func(t *testing.T) {
+	t.Run("Test Get All Category Failed", func(t *testing.T) {
 		categoryBusiness := NewCategoryBusiness(mockCategoryDataFailed{})
 		result, err := categoryBusiness.GetAllCategory()
 		assert.NotNil(t, err)
