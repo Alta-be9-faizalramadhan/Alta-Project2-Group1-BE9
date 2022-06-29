@@ -4,6 +4,9 @@ import (
 	_bookBusiness "altaproject/features/books/business"
 	_bookData "altaproject/features/books/data"
 	_bookPresentation "altaproject/features/books/presentation"
+	_shoppingCartDetailBusiness "altaproject/features/shoppingCartDetails/business"
+	_shoppingCartDetailData "altaproject/features/shoppingCartDetails/data"
+	_shoppingCartDetailPresentation "altaproject/features/shoppingCartDetails/presentation"
 	_shoppingCartBusiness "altaproject/features/shoppingCarts/business"
 	_shoppingCartData "altaproject/features/shoppingCarts/data"
 	_shoppingCartPresentation "altaproject/features/shoppingCarts/presentation"
@@ -15,9 +18,10 @@ import (
 )
 
 type Presenter struct {
-	UserPresenter         *_userPresentation.UserHandler
-	BookPresenter         *_bookPresentation.BookHandler
-	ShoppingCartPresenter *_shoppingCartPresentation.ShoppingCartHandler
+	UserPresenter               *_userPresentation.UserHandler
+	BookPresenter               *_bookPresentation.BookHandler
+	ShoppingCartPresenter       *_shoppingCartPresentation.ShoppingCartHandler
+	ShoppingCartDetailPresenter *_shoppingCartDetailPresentation.ShoppingCartDetailHandler
 }
 
 func InitFactory(dbConn *gorm.DB) Presenter {
@@ -33,9 +37,14 @@ func InitFactory(dbConn *gorm.DB) Presenter {
 	shoppingCartBusiness := _shoppingCartBusiness.NewShoppingCartBusiness(shoppingCartData)
 	shoppingCartPresentation := _shoppingCartPresentation.NewShoppingCartHandler(shoppingCartBusiness)
 
+	shoppingCartDetailData := _shoppingCartDetailData.NewShoppingCartDetailRepository(dbConn)
+	shoppingCartDetailBusiness := _shoppingCartDetailBusiness.NewShoppingCartDetailBusiness(shoppingCartDetailData)
+	shoppingCartDetailPresentation := _shoppingCartDetailPresentation.NewShoppingCartDetailHandler(shoppingCartDetailBusiness)
+
 	return Presenter{
-		UserPresenter:         userPresentation,
-		BookPresenter:         bookPresentation,
-		ShoppingCartPresenter: shoppingCartPresentation,
+		UserPresenter:               userPresentation,
+		BookPresenter:               bookPresentation,
+		ShoppingCartPresenter:       shoppingCartPresentation,
+		ShoppingCartDetailPresenter: shoppingCartDetailPresentation,
 	}
 }
