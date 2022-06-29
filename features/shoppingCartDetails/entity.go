@@ -24,13 +24,15 @@ type ShoppingCart struct {
 }
 
 type Business interface {
-	GetAllCartDetails(id, limit, offset int) (data []Core, err error)
+	GetAllCartDetails(idCart, limit, offset int) (data []Core, err error)
 	InsertCartDetails(data Core) (row int, err error)
-	DeleteCartDetails(id int) (row int, err error)
+	DeleteCartDetails(idCart int) (row int, err error)
+	UpdateCartDetails(idCart int, data Core) (row int, err error)
 }
 
 type Data interface {
-	SelectAllCartDetails(id, limit, offset int) (data []Core, err error)
+	SelectAllCartDetails(idCart, limit, offset int) (data []Core, err error)
 	InsertCartDetails(data Core) (row int, err error)
-	DeleteCartDetails(id int) (row int, err error)
+	DeleteCartDetails(idCart int) (row int, err error)
+	PutCartDetails(idCart int, data Core) (row int, err error)
 }

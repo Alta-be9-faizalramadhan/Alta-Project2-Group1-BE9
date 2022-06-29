@@ -8,7 +8,7 @@ type ShoppingCartDetail struct {
 	QuantityBuyBook uint `form:"quantity_buy_book"`
 	TotalPriceBook  uint `form:"total_price_book"`
 	BookId          int  `form:"book_id"`
-	ShoppingCartId  int  `form:"shoppingcart_id"`
+	ShoppingCartId  int  `form:"shopping_cart_id"`
 }
 
 func ToCore(req ShoppingCartDetail) shoppingcartdetails.Core {

@@ -49,3 +49,15 @@ func (repo *mysqlShoppingCartDetailRepository) DeleteCartDetails(idCart int) (ro
 	}
 	return int(result.RowsAffected), nil
 }
+
+func (repo *mysqlShoppingCartDetailRepository) PutCartDetails(intCart int, input shoppingcartdetails.Core) (row int, err error) {
+	var putData = fromCore(input)
+	result := repo.db.Model(&ShoppingCartDetail{}).Where("shopping_cart_id = ?", intCart).Updates(&putData)
+	if result.Error != nil {
+		return 0, result.Error
+	}
+	if result.RowsAffected == 0 {
+		return 0, fmt.Errorf("failed to update shopping cart details")
+	}
+	return int(result.RowsAffected), nil
+}
