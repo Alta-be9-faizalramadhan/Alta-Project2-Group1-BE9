@@ -2,6 +2,7 @@ package config
 
 import (
 	_mBooks "altaproject/features/books/data"
+	_mShoppingCartDetails "altaproject/features/shoppingCartDetails/data"
 	_mShoppingCarts "altaproject/features/shoppingCarts/data"
 	_mUsers "altaproject/features/users/data"
 	"fmt"
@@ -39,4 +40,5 @@ func InitMigrate(db *gorm.DB) {
 	db.AutoMigrate(&_mUsers.User{})
 	db.AutoMigrate(&_mBooks.Book{})
 	db.AutoMigrate(&_mShoppingCarts.ShoppingCart{})
+	db.AutoMigrate(&_mShoppingCartDetails.ShoppingCartDetail{})
 }
