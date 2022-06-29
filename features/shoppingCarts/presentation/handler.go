@@ -51,22 +51,36 @@ func (h *ShoppingCartHandler) GetAllHistoryOrder(c echo.Context) error {
 }
 
 func (h *ShoppingCartHandler) AddCart(c echo.Context) error {
-	var cart _requestShoppingCart.ShoppingCart
-	errBind := c.Bind(&cart)
-	if errBind != nil {
-		return c.JSON(http.StatusInternalServerError, map[string]interface{}{
-			"message": "failed to bind data",
+	idToken, errToken := middlewares.ExtractToken(c)
+	if errToken != nil {
+		c.JSON(http.StatusBadRequest, map[string]interface{}{
+			"message": "invalid token",
 		})
 	}
-	result, err := h.shoppingCartBusiness.CreateNewCart(_requestShoppingCart.ToCore(cart))
+	if idToken == 0 {
+		return c.JSON(http.StatusUnauthorized, map[string]interface{}{
+			"message": "unauthorized",
+		})
+	}
+	quantity := c.FormValue("quantity")
+	quantitiyInt, _ := strconv.Atoi(quantity)
+	price := c.FormValue("price")
+	priceInt, _ := strconv.Atoi(price)
+	var cart = _requestShoppingCart.ShoppingCart{
+		TotalQuantity: uint(quantitiyInt),
+		TotalPrice:    uint(priceInt),
+		Status:        "Wish List",
+		UserID:        idToken,
+	}
+	result, err := h.shoppingCartBusiness.CreateCart(idToken, _requestShoppingCart.ToCore(cart))
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, map[string]interface{}{
-			"message": "failed to insert data",
+			"message": "failed insert to cart",
 		})
 	}
 	if result == 0 {
 		return c.JSON(http.StatusInternalServerError, map[string]interface{}{
-			"message": "failed to insert data",
+			"message": "failed insert to cart",
 		})
 	}
 	return c.JSON(http.StatusOK, map[string]interface{}{

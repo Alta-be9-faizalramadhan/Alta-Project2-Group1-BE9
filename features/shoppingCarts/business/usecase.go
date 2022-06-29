@@ -19,8 +19,17 @@ func (uc *shoppingCartUsecase) GetHistoryOrder(id int, limit int, offset int) (r
 	return resp, err
 }
 
-func (uc *shoppingCartUsecase) CreateNewCart(data shoppingcarts.Core) (row int, err error) {
-	row, err = uc.shoppingCartData.InsertNewCart(data)
+func (uc *shoppingCartUsecase) CreateCart(id int, data shoppingcarts.Core) (row int, err error) {
+	cond, totalQuantity, totalPrice := uc.shoppingCartData.IsCartExist(id)
+	if cond {
+		row, err = uc.shoppingCartData.InsertNewCart(data)
+	} else {
+		var updates = shoppingcarts.Core{
+			TotalQuantity: data.TotalQuantity + uint(totalQuantity),
+			TotalPrice:    data.TotalPrice + uint(totalPrice),
+		}
+		row, err = uc.shoppingCartData.UpdatedCart(id, updates)
+	}
 	return row, err
 }
 
