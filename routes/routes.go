@@ -40,8 +40,8 @@ func New(presenter factory.Presenter) *echo.Echo {
 	e.GET("orderdetails/:id", presenter.ShoppingCartDetailPresenter.GetAllCartDetails)
 	e.POST("orderdetails", presenter.ShoppingCartDetailPresenter.InsertCartDetails)
 	e.DELETE("orderdetails/:id", presenter.ShoppingCartDetailPresenter.DeleteCartDetails)
+	e.PUT("orderdetails/:id", presenter.ShoppingCartDetailPresenter.UpdateCartDetails)
 
 	e.GET("categories", presenter.CategoryPresenter.GetAllCategory)
-
 	return e
 }

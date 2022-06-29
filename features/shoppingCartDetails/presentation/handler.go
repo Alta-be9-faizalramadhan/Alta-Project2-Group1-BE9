@@ -96,3 +96,46 @@ func (h *ShoppingCartDetailHandler) DeleteCartDetails(c echo.Context) error {
 		"message": "success to delete shopping cart details",
 	})
 }
+
+func (h *ShoppingCartDetailHandler) UpdateCartDetails(c echo.Context) error {
+	id := c.Param("id")
+	idPut, errPut := strconv.Atoi(id)
+	if errPut != nil {
+		return c.JSON(http.StatusBadRequest, map[string]interface{}{
+			"message": "failed to recognized id cart",
+		})
+	}
+	quantityBuyBook := c.FormValue("quantity_buy_book")
+	quantityBuyBookInt, _ := strconv.Atoi(quantityBuyBook)
+	totalPriceBook := c.FormValue("total_price_book")
+	totalPriceBookInt, _ := strconv.Atoi(totalPriceBook)
+	// bookId := c.FormValue("book_id")
+	// bookIdInt, _ := strconv.Atoi(bookId)
+	// shoppingCartId := c.FormValue("shopping_cart_id")
+	// shoppingCartIdInt, _ := strconv.Atoi(shoppingCartId)
+	var cartDetail = _requestSCD.ShoppingCartDetail{
+		QuantityBuyBook: uint(quantityBuyBookInt),
+		TotalPriceBook:  uint(totalPriceBookInt),
+		// BookId:          bookIdInt,
+		// ShoppingCartId:  shoppingCartIdInt,
+	}
+	result, err := h.shoppingCartDetailBusiness.UpdateCartDetails(idPut, _requestSCD.ToCore(cartDetail))
+	if err != nil {
+		return c.JSON(http.StatusBadRequest, map[string]interface{}{
+			"message": "failed to update shopping cart details",
+		})
+	}
+	if result == 0 {
+		return c.JSON(http.StatusInternalServerError, map[string]interface{}{
+			"message": "failed to update shopping cart details",
+		})
+	}
+	if result == -1 {
+		return c.JSON(http.StatusBadRequest, map[string]interface{}{
+			"message": err.Error(),
+		})
+	}
+	return c.JSON(http.StatusOK, map[string]interface{}{
+		"message": "success update data shopping cart details",
+	})
+}
