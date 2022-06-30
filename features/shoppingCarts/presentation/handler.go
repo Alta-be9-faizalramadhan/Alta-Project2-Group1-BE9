@@ -22,7 +22,7 @@ func NewShoppingCartHandler(business shoppingcarts.Business) *ShoppingCartHandle
 }
 
 func (h *ShoppingCartHandler) GetAllHistoryOrder(c echo.Context) error {
-	id := c.Param("id")
+	id := c.Param("idUser")
 	limit := c.QueryParam("limit")
 	offset := c.QueryParam("offset")
 	limitInt, _ := strconv.Atoi(limit)
