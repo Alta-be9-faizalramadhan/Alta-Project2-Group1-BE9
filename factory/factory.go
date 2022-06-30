@@ -37,13 +37,13 @@ func InitFactory(dbConn *gorm.DB) Presenter {
 	bookBusiness := _bookBusiness.NewBookBusiness(bookData)
 	bookPresentation := _bookPresentation.NewBookHandler(bookBusiness)
 
-	shoppingCartData := _shoppingCartData.NewShoppingCartRepository(dbConn)
-	shoppingCartBusiness := _shoppingCartBusiness.NewShoppingCartBusiness(shoppingCartData)
-	shoppingCartPresentation := _shoppingCartPresentation.NewShoppingCartHandler(shoppingCartBusiness)
-
 	shoppingCartDetailData := _shoppingCartDetailData.NewShoppingCartDetailRepository(dbConn)
 	shoppingCartDetailBusiness := _shoppingCartDetailBusiness.NewShoppingCartDetailBusiness(shoppingCartDetailData)
 	shoppingCartDetailPresentation := _shoppingCartDetailPresentation.NewShoppingCartDetailHandler(shoppingCartDetailBusiness)
+
+	shoppingCartData := _shoppingCartData.NewShoppingCartRepository(dbConn)
+	shoppingCartBusiness := _shoppingCartBusiness.NewShoppingCartBusiness(shoppingCartData, shoppingCartDetailData)
+	shoppingCartPresentation := _shoppingCartPresentation.NewShoppingCartHandler(shoppingCartBusiness)
 
 	categoryData := _categoryData.NewCategoryRepository(dbConn)
 	categoryBusiness := _categoryBusiness.NewCategoryBusiness(categoryData)

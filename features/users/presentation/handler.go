@@ -74,7 +74,7 @@ func (h *UserHandler) AddUser(c echo.Context) error {
 	storageClient, err := storage.NewClient(ctx, option.WithCredentialsFile("keys.json"))
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, map[string]interface{}{
-			"message": "Gagal",
+			"message": "misssing credentials file",
 		})
 	}
 	file, err := c.FormFile("file")
@@ -173,7 +173,7 @@ func (h *UserHandler) PutData(c echo.Context) error {
 	storageClient, err := storage.NewClient(ctx, option.WithCredentialsFile("keys.json"))
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, map[string]interface{}{
-			"message": "Gagal",
+			"message": "misssing credentials file",
 		})
 	}
 	file, err := c.FormFile("file")

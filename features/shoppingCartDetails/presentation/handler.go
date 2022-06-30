@@ -98,11 +98,18 @@ func (h *ShoppingCartDetailHandler) DeleteCartDetails(c echo.Context) error {
 }
 
 func (h *ShoppingCartDetailHandler) UpdateCartDetails(c echo.Context) error {
-	id := c.Param("idcart")
-	idPut, errPut := strconv.Atoi(id)
-	if errPut != nil {
+	idCart := c.QueryParam("idCart")
+	idCartInt, errCart := strconv.Atoi(idCart)
+	if errCart != nil {
 		return c.JSON(http.StatusBadRequest, map[string]interface{}{
 			"message": "failed to recognized id cart",
+		})
+	}
+	idBook := c.QueryParam("idBook")
+	idBookInt, errBook := strconv.Atoi(idBook)
+	if errBook != nil {
+		return c.JSON(http.StatusBadRequest, map[string]interface{}{
+			"message": "failed to recognized id book",
 		})
 	}
 	quantityBuyBook := c.FormValue("quantity_buy_book")
@@ -119,7 +126,7 @@ func (h *ShoppingCartDetailHandler) UpdateCartDetails(c echo.Context) error {
 		// BookId:          bookIdInt,
 		// ShoppingCartId:  shoppingCartIdInt,
 	}
-	result, err := h.shoppingCartDetailBusiness.UpdateCartDetails(idPut, _requestSCD.ToCore(cartDetail))
+	result, err := h.shoppingCartDetailBusiness.UpdateCartDetails(idCartInt, idBookInt, _requestSCD.ToCore(cartDetail))
 	if err != nil {
 		return c.JSON(http.StatusBadRequest, map[string]interface{}{
 			"message": "failed to update shopping cart details",

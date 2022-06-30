@@ -28,7 +28,7 @@ func (repo *mysqlShoppingCartDetailRepository) SelectAllCartDetails(id, limit, o
 
 func (repo *mysqlShoppingCartDetailRepository) InsertCartDetails(data shoppingcartdetails.Core) (row int, err error) {
 	shoppingcartdetail := fromCore(data)
-	result := repo.db.Model(&ShoppingCartDetail{}).Create(&shoppingcartdetail)
+	result := repo.db.Create(&shoppingcartdetail)
 	if result.Error != nil {
 		return 0, result.Error
 	}
@@ -50,9 +50,9 @@ func (repo *mysqlShoppingCartDetailRepository) DeleteCartDetails(idCart int) (ro
 	return int(result.RowsAffected), nil
 }
 
-func (repo *mysqlShoppingCartDetailRepository) PutCartDetails(intCart int, input shoppingcartdetails.Core) (row int, err error) {
+func (repo *mysqlShoppingCartDetailRepository) PutCartDetails(idCart int, idBook int, input shoppingcartdetails.Core) (row int, err error) {
 	var putData = fromCore(input)
-	result := repo.db.Model(&ShoppingCartDetail{}).Where("shopping_cart_id = ?", intCart).Updates(&putData)
+	result := repo.db.Model(&ShoppingCartDetail{}).Where("shopping_cart_id = ? AND book_id = ?", idCart, idBook).Updates(&putData)
 	if result.Error != nil {
 		return 0, result.Error
 	}
@@ -60,4 +60,14 @@ func (repo *mysqlShoppingCartDetailRepository) PutCartDetails(intCart int, input
 		return 0, fmt.Errorf("failed to update shopping cart details")
 	}
 	return int(result.RowsAffected), nil
+}
+
+func (repo *mysqlShoppingCartDetailRepository) IsBookNotInCartDetail(idBook int, idCart int) (bool, shoppingcartdetails.Core) {
+	var dataShoppingDetail ShoppingCartDetail
+	result := repo.db.Where("shopping_cart_id = ? AND book_id = ?", idCart, idBook).First(&dataShoppingDetail)
+	fmt.Print(result.RowsAffected)
+	if result.RowsAffected == 0 {
+		return true, shoppingcartdetails.Core{}
+	}
+	return false, dataShoppingDetail.toCore()
 }

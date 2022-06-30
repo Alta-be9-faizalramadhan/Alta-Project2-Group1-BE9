@@ -22,7 +22,7 @@ func NewShoppingCartHandler(business shoppingcarts.Business) *ShoppingCartHandle
 }
 
 func (h *ShoppingCartHandler) GetAllHistoryOrder(c echo.Context) error {
-	id := c.Param("id")
+	id := c.Param("idUser")
 	limit := c.QueryParam("limit")
 	offset := c.QueryParam("offset")
 	limitInt, _ := strconv.Atoi(limit)
@@ -62,6 +62,13 @@ func (h *ShoppingCartHandler) AddCart(c echo.Context) error {
 			"message": "unauthorized",
 		})
 	}
+	id := c.Param("idBook")
+	idBookInt, errId := strconv.Atoi(id)
+	if errId != nil {
+		return c.JSON(http.StatusBadRequest, map[string]interface{}{
+			"message": "failed to recognized Book ID",
+		})
+	}
 	quantity := c.FormValue("quantity")
 	quantitiyInt, _ := strconv.Atoi(quantity)
 	price := c.FormValue("price")
@@ -72,7 +79,7 @@ func (h *ShoppingCartHandler) AddCart(c echo.Context) error {
 		Status:        "Wish List",
 		UserID:        idToken,
 	}
-	result, err := h.shoppingCartBusiness.CreateCart(idToken, _requestShoppingCart.ToCore(cart))
+	result, err := h.shoppingCartBusiness.CreateCart(idToken, idBookInt, _requestShoppingCart.ToCore(cart))
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, map[string]interface{}{
 			"message": "failed insert to cart",

@@ -33,10 +33,10 @@ func (uc *shoppingCartDetailUseCase) DeleteCartDetails(id int) (row int, err err
 	return row, errDel
 }
 
-func (uc *shoppingCartDetailUseCase) UpdateCartDetails(id int, data shoppingcartdetails.Core) (row int, err error) {
+func (uc *shoppingCartDetailUseCase) UpdateCartDetails(idCart int, idBook int, data shoppingcartdetails.Core) (row int, err error) {
 	if data.QuantityBuyBook == 0 || data.TotalPriceBook == 0 {
 		return -1, errors.New("all input data must be filled")
 	}
-	row, err1 := uc.shoppingCartDetailData.PutCartDetails(id, data)
+	row, err1 := uc.shoppingCartDetailData.PutCartDetails(idCart, idBook, data)
 	return row, err1
 }
