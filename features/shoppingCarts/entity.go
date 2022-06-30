@@ -24,5 +24,5 @@ type Data interface {
 	InsertNewCart(data Core) (idShoppingCart int, row int, err error)
 	UpdatedStatusCart(id int, status string) (row int, err error)
 	IsCartNotExist(id int) (cond bool, data Core)
-	UpdatedCart(id int, data Core) (row int, err error)
+	UpdatedCart(idUser int, dataInput Core) (dataUpdated Core, row int, err error)
 }

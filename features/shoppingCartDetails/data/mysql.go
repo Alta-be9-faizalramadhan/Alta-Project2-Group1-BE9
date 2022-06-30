@@ -61,3 +61,11 @@ func (repo *mysqlShoppingCartDetailRepository) PutCartDetails(intCart int, input
 	}
 	return int(result.RowsAffected), nil
 }
+
+func (repo *mysqlShoppingCartDetailRepository) IsBookNotInCartDetail(idBook int, idCart int) (cond bool) {
+	result := repo.db.Model(&ShoppingCartDetail{}).Where("shopping_cart_id = ? AND book_id = ", idCart, idBook).First(&ShoppingCartDetail{})
+	if result.RowsAffected == 0 {
+		return true
+	}
+	return false
+}

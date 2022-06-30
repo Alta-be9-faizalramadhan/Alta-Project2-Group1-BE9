@@ -49,23 +49,23 @@ func (repo *mysqlShoppingCartRepository) UpdatedStatusCart(id int, status string
 	return int(result.RowsAffected), nil
 }
 
-func (repo *mysqlShoppingCartRepository) UpdatedCart(idUser int, data shoppingcarts.Core) (int, error) {
+func (repo *mysqlShoppingCartRepository) UpdatedCart(idUser int, data shoppingcarts.Core) (shoppingcarts.Core, int, error) {
 	var dataShoppingCart = fromCore(data)
 	result := repo.db.Model(&ShoppingCart{}).Where("status = ? AND user_id = ?", "Wish List", idUser).Updates(&dataShoppingCart)
 	if result.Error != nil {
-		return 0, result.Error
+		return dataShoppingCart.toCore(), 0, result.Error
 	}
 	if result.RowsAffected != 1 {
-		return 0, fmt.Errorf("failed to update cart")
+		return dataShoppingCart.toCore(), 0, fmt.Errorf("failed to update cart")
 	}
-	return int(result.RowsAffected), nil
+	return dataShoppingCart.toCore(), int(result.RowsAffected), nil
 }
 
 func (repo *mysqlShoppingCartRepository) IsCartNotExist(id int) (bool, shoppingcarts.Core) {
 	var dataShoppingCart ShoppingCart
 	result := repo.db.Model(&ShoppingCart{}).Where("status = ? AND user_id = ?", "Wish List", id).First(&dataShoppingCart)
 	if result.RowsAffected == 0 {
-		return true, dataShoppingCart.toCore()
+		return true, shoppingcarts.Core{TotalQuantity: 0, TotalPrice: 0}
 	}
 	return false, dataShoppingCart.toCore()
 }

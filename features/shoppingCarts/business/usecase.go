@@ -52,15 +52,35 @@ func (uc *shoppingCartUsecase) CreateCart(idUser int, idBook int, data shoppingc
 			TotalQuantity: data.TotalQuantity + shoppingCart.TotalQuantity,
 			TotalPrice:    data.TotalPrice + shoppingCart.TotalPrice,
 		}
-		row, err = uc.shoppingCartData.UpdatedCart(idUser, updates)
-		if condition { //apakah sudah menambahkan buku? update to shopping cart details
-
-		} else { //insert new
-
+		data, rowSC, errSC := uc.shoppingCartData.UpdatedCart(idUser, updates)
+		if errSC != nil {
+			return 0, errSC
 		}
+		var product = shoppingcartdetails.Core{
+			QuantityBuyBook: data.TotalQuantity,
+			TotalPriceBook:  data.TotalPrice,
+			Book: shoppingcartdetails.Book{
+				ID:    idBook,
+				Price: (data.TotalPrice / data.TotalQuantity),
+			},
+			ShoppingCart: shoppingcartdetails.ShoppingCart{
+				ID:     data.ID,
+				UserID: uint(idUser),
+			},
+		}
+		if uc.shoppingCartDetailData.IsBookNotInCartDetail(idBook, data.ID) {
+			_, err := uc.shoppingCartDetailData.InsertCartDetails(product)
+			if err != nil {
+				return 0, err
+			}
+		} else {
+			_, err := uc.shoppingCartDetailData.PutCartDetails(data.ID, product)
+			if err != nil {
+				return 0, err
+			}
+		}
+		return rowSC, nil
 	}
-
-	return row, err
 }
 
 func (uc *shoppingCartUsecase) UpdatedStatusCart(id int, status string) (row int, err error) {
