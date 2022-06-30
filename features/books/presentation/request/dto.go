@@ -14,6 +14,7 @@ type Book struct {
 	Sold        uint   `json:"sold" form:"sold"`
 	Description string `json:"description" form:"description"`
 	UserId      int    `json:"user_id" form:"user_id"`
+	ImageURL    string `json:"image_url" form:"image_url"`
 }
 
 func ToCore(req Book) books.Core {
@@ -28,6 +29,7 @@ func ToCore(req Book) books.Core {
 		BookPage:    req.BookPage,
 		Sold:        req.Sold,
 		Description: req.Description,
+		ImageURL:    req.ImageURL,
 		User: books.User{
 			ID: req.UserId,
 		},

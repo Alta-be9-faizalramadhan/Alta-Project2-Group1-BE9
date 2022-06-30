@@ -17,6 +17,7 @@ type Book struct {
 	BookPage    string    `json:"book_page" form:"book_page"`
 	Sold        uint      `json:"sold" form:"sold"`
 	Description string    `json:"description" form:"description"`
+	ImageURL    string    `json:"image_url" form:"image_url"`
 	CreatedAt   time.Time `json:"created_at" form:"created_at"`
 	User        User      `json:"user" form:"user"`
 }
@@ -39,6 +40,7 @@ func FromCore(data books.Core) Book {
 		BookPage:    data.BookPage,
 		Sold:        data.Sold,
 		Description: data.Description,
+		ImageURL:    data.ImageURL,
 		CreatedAt:   data.CreatedAt,
 		User: User{
 			ID:       data.User.ID,
