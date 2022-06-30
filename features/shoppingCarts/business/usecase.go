@@ -22,14 +22,14 @@ func (uc *shoppingCartUsecase) GetHistoryOrder(id int, limit int, offset int) (r
 	return resp, err
 }
 
-func (uc *shoppingCartUsecase) CreateCart(idUser int, idBook int, data shoppingcarts.Core) (rowSC int, errSC error) {
+func (uc *shoppingCartUsecase) CreateCart(idUser int, idBook int, data shoppingcarts.Core) (idCart int, rowSC int, errSC error) {
 	cond, shoppingCart := uc.shoppingCartData.IsCartNotExist(idUser)
 	if cond {
 		var idShoppingCart int
 		data.TotalPrice = data.TotalPrice * data.TotalQuantity
 		idShoppingCart, rowSC, errSC = uc.shoppingCartData.InsertNewCart(data)
 		if errSC != nil {
-			return 0, errSC
+			return 0, 0, errSC
 		}
 		var product = shoppingcartdetails.Core{
 			QuantityBuyBook: data.TotalQuantity,
@@ -45,9 +45,9 @@ func (uc *shoppingCartUsecase) CreateCart(idUser int, idBook int, data shoppingc
 		}
 		_, err := uc.shoppingCartDetailData.InsertCartDetails(product)
 		if err != nil {
-			return 0, err
+			return 0, 0, err
 		}
-		return rowSC, nil
+		return idShoppingCart, rowSC, nil
 	} else {
 		var quantity = data.TotalQuantity
 		var price = data.TotalPrice
@@ -57,7 +57,7 @@ func (uc *shoppingCartUsecase) CreateCart(idUser int, idBook int, data shoppingc
 		}
 		data, rowSC, errSC := uc.shoppingCartData.UpdatedCart(idUser, updates)
 		if errSC != nil {
-			return 0, errSC
+			return data.ID, 0, errSC
 		}
 		cond, productDetail := uc.shoppingCartDetailData.IsBookNotInCartDetail(idBook, data.ID)
 
@@ -76,7 +76,7 @@ func (uc *shoppingCartUsecase) CreateCart(idUser int, idBook int, data shoppingc
 			}
 			_, err := uc.shoppingCartDetailData.InsertCartDetails(product)
 			if err != nil {
-				return 0, err
+				return 0, 0, err
 			}
 		} else {
 			var product = shoppingcartdetails.Core{
@@ -85,10 +85,10 @@ func (uc *shoppingCartUsecase) CreateCart(idUser int, idBook int, data shoppingc
 			}
 			_, err := uc.shoppingCartDetailData.PutCartDetails(data.ID, idBook, product)
 			if err != nil {
-				return 0, err
+				return 0, 0, err
 			}
 		}
-		return rowSC, nil
+		return data.ID, rowSC, nil
 	}
 }
 

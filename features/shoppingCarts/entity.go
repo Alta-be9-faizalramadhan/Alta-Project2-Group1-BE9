@@ -15,7 +15,7 @@ type User struct {
 
 type Business interface {
 	GetHistoryOrder(id int, limit int, offset int) (data []Core, err error)
-	CreateCart(idUser int, idBook int, data Core) (rowSC int, errSC error)
+	CreateCart(idUser int, idBook int, data Core) (idCart int, rowSC int, errSC error)
 	UpdatedStatusCart(id int, status string) (row int, err error)
 }
 
