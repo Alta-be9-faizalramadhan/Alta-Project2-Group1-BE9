@@ -18,6 +18,7 @@ type Business interface {
 	CreateCart(idUser int, idBook int, data Core) (idCart int, rowSC int, errSC error)
 	UpdatedStatusCart(id int, status string) (row int, err error)
 	UpdatedCart(idCart int, idUser int, idBook int, quantity int, price int) (rowSC int, errSC error)
+	DeleteCart(idCart int, idUser int, idBook int) (rowSC int, errSC error)
 }
 
 type Data interface {

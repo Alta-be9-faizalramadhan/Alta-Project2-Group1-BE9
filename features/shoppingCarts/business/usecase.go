@@ -116,3 +116,18 @@ func (uc *shoppingCartUsecase) UpdatedCart(idCart int, idUser int, idBook int, q
 	_, row, err := uc.shoppingCartData.UpdatedCart(idUser, dataCart)
 	return row, err
 }
+func (uc *shoppingCartUsecase) DeleteCart(idCart int, idUser int, idBook int) (rowSC int, errSC error) {
+	dataBefore, _ := uc.shoppingCartDetailData.SelectCartDetail(idCart, idBook)
+	quantityBefore := dataBefore.QuantityBuyBook
+	priceBefore := dataBefore.TotalPriceBook
+	_, err := uc.shoppingCartDetailData.DeleteCartDetails(idCart, idBook)
+	if err != nil {
+		return 0, err
+	}
+	var dataCart, _ = uc.shoppingCartData.SelectOrder(idUser)
+	totalPrice := dataCart.TotalPrice
+	dataCart.TotalPrice = (totalPrice - priceBefore)
+	dataCart.TotalQuantity = (dataCart.TotalQuantity - quantityBefore)
+	_, row, err := uc.shoppingCartData.UpdatedCart(idUser, dataCart)
+	return row, err
+}

@@ -86,7 +86,14 @@ func (h *ShoppingCartDetailHandler) DeleteCartDetails(c echo.Context) error {
 			"message": "id shoppingcart is not recognize",
 		})
 	}
-	_, err := h.shoppingCartDetailBusiness.DeleteCartDetails(idHap)
+	idbook := c.Param("idbook")
+	idBookInt, errHap := strconv.Atoi(idbook)
+	if errHap != nil {
+		return c.JSON(http.StatusBadRequest, map[string]interface{}{
+			"message": "id book is not recognize",
+		})
+	}
+	_, err := h.shoppingCartDetailBusiness.DeleteCartDetails(idHap, idBookInt)
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, map[string]interface{}{
 			"message": "failed to delete shopping cart details",

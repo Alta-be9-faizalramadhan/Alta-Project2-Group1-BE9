@@ -19,7 +19,7 @@ func (repo mockShoppingCartDetailData) SelectAllCartDetails(id, limit, offset in
 func (repo mockShoppingCartDetailData) SelectCartDetail(idCart int, idBook int) (shoppingcartdetails.Core, error) {
 	return shoppingcartdetails.Core{ID: 1, Book: shoppingcartdetails.Book{ID: 1, Title: "Harry Potter", Price: 150000}, QuantityBuyBook: 1, TotalPriceBook: 150000, ShoppingCart: shoppingcartdetails.ShoppingCart{ID: 1, UserID: 1}}, nil
 }
-func (repo mockShoppingCartDetailData) DeleteCartDetails(idCart int) (row int, err error) {
+func (repo mockShoppingCartDetailData) DeleteCartDetails(idCart int, idBook int) (row int, err error) {
 	return 1, nil
 }
 func (repo mockShoppingCartDetailData) PutCartDetails(idCart int, idBook int, input shoppingcartdetails.Core) (int, error) {
@@ -40,7 +40,7 @@ func (repo mockShoppingCartDetailDataFailed) SelectAllCartDetails(id, limit, off
 func (repo mockShoppingCartDetailDataFailed) SelectCartDetail(idCart int, idBook int) (shoppingcartdetails.Core, error) {
 	return shoppingcartdetails.Core{}, fmt.Errorf("Failed to select data")
 }
-func (repo mockShoppingCartDetailDataFailed) DeleteCartDetails(idCart int) (row int, err error) {
+func (repo mockShoppingCartDetailDataFailed) DeleteCartDetails(idCart int, idBook int) (row int, err error) {
 	return 0, fmt.Errorf("Failed to delete data")
 }
 func (repo mockShoppingCartDetailDataFailed) PutCartDetails(idCart int, idBook int, input shoppingcartdetails.Core) (int, error) {
@@ -185,13 +185,13 @@ func TestInsertCartDetails(t *testing.T) {
 func TestDeleteCartDetails(t *testing.T) {
 	t.Run("Test Delete Details Success", func(t *testing.T) {
 		shoppingCartDetailBusiness := NewShoppingCartDetailBusiness(mockShoppingCartDetailData{})
-		result, err := shoppingCartDetailBusiness.DeleteCartDetails(1)
+		result, err := shoppingCartDetailBusiness.DeleteCartDetails(1, 1)
 		assert.Nil(t, err)
 		assert.Equal(t, 1, result)
 	})
 	t.Run("Test Delete Details Failed", func(t *testing.T) {
 		shoppingCartDetailBusiness := NewShoppingCartDetailBusiness(mockShoppingCartDetailDataFailed{})
-		result, err := shoppingCartDetailBusiness.DeleteCartDetails(1)
+		result, err := shoppingCartDetailBusiness.DeleteCartDetails(1, 1)
 		assert.NotNil(t, err)
 		assert.Equal(t, 0, result)
 	})

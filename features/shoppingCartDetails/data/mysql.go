@@ -46,9 +46,9 @@ func (repo *mysqlShoppingCartDetailRepository) InsertCartDetails(data shoppingca
 	return int(result.RowsAffected), nil
 }
 
-func (repo *mysqlShoppingCartDetailRepository) DeleteCartDetails(idCart int) (row int, err error) {
+func (repo *mysqlShoppingCartDetailRepository) DeleteCartDetails(idCart int, idBook int) (row int, err error) {
 	var dataDetailCart ShoppingCartDetail
-	result := repo.db.Delete(&dataDetailCart, "shopping_cart_id = ?", idCart)
+	result := repo.db.Where("shopping_cart_id = ? AND book_id = ? ", idCart, idBook).Delete(&dataDetailCart)
 	if result.Error != nil {
 		return 0, result.Error
 	}
