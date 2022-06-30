@@ -51,6 +51,8 @@ func (repo *mysqlUserRepository) InsertData(input users.Core) (row int, err erro
 }
 
 func (repo *mysqlUserRepository) UpdateData(id int, data users.Core) (int, error) {
+	passwordHash := encription.GetMD5Hash(data.Password)
+	data.Password = passwordHash
 	var update = fromCore(data)
 	result := repo.db.Model(&User{}).Where("id = ?", id).Updates(&update)
 	if result.Error != nil {
