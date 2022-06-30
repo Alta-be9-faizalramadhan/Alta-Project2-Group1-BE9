@@ -62,17 +62,24 @@ func (h *ShoppingCartHandler) AddCart(c echo.Context) error {
 			"message": "unauthorized",
 		})
 	}
+	id := c.Param("idBook")
+	idBookInt, errId := strconv.Atoi(id)
+	if errId != nil {
+		return c.JSON(http.StatusBadRequest, map[string]interface{}{
+			"message": "failed to recognized Book ID",
+		})
+	}
 	quantity := c.FormValue("quantity")
 	quantitiyInt, _ := strconv.Atoi(quantity)
 	price := c.FormValue("price")
 	priceInt, _ := strconv.Atoi(price)
 	var cart = _requestShoppingCart.ShoppingCart{
 		TotalQuantity: uint(quantitiyInt),
-		TotalPrice:    uint(priceInt),
+		TotalPrice:    uint(priceInt) * uint(quantitiyInt),
 		Status:        "Wish List",
 		UserID:        idToken,
 	}
-	result, err := h.shoppingCartBusiness.CreateCart(idToken, _requestShoppingCart.ToCore(cart))
+	result, err := h.shoppingCartBusiness.CreateCart(idToken, idBookInt, _requestShoppingCart.ToCore(cart))
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, map[string]interface{}{
 			"message": "failed insert to cart",

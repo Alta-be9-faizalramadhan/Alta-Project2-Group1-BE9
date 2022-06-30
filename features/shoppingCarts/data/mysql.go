@@ -26,16 +26,16 @@ func (repo *mysqlShoppingCartRepository) SelectAllOrder(id int, limit int, offse
 	return toCoreList(dataShoppingCart), nil
 }
 
-func (repo *mysqlShoppingCartRepository) InsertNewCart(data shoppingcarts.Core) (int, error) {
+func (repo *mysqlShoppingCartRepository) InsertNewCart(data shoppingcarts.Core) (int, int, error) {
 	cart := fromCore(data)
 	result := repo.db.Create(&cart)
 	if result.Error != nil {
-		return 0, result.Error
+		return 0, 0, result.Error
 	}
 	if result.RowsAffected != 1 {
-		return 0, fmt.Errorf("failed to insert data")
+		return 0, 0, fmt.Errorf("failed to insert data")
 	}
-	return int(result.RowsAffected), nil
+	return int(cart.ID), int(result.RowsAffected), nil
 }
 
 func (repo *mysqlShoppingCartRepository) UpdatedStatusCart(id int, status string) (int, error) {
@@ -49,9 +49,9 @@ func (repo *mysqlShoppingCartRepository) UpdatedStatusCart(id int, status string
 	return int(result.RowsAffected), nil
 }
 
-func (repo *mysqlShoppingCartRepository) UpdatedCart(id int, data shoppingcarts.Core) (int, error) {
+func (repo *mysqlShoppingCartRepository) UpdatedCart(idUser int, data shoppingcarts.Core) (int, error) {
 	var dataShoppingCart = fromCore(data)
-	result := repo.db.Model(&ShoppingCart{}).Where("status = ? AND user_id = ?", "Wish List", id).Updates(&dataShoppingCart)
+	result := repo.db.Model(&ShoppingCart{}).Where("status = ? AND user_id = ?", "Wish List", idUser).Updates(&dataShoppingCart)
 	if result.Error != nil {
 		return 0, result.Error
 	}
@@ -61,11 +61,11 @@ func (repo *mysqlShoppingCartRepository) UpdatedCart(id int, data shoppingcarts.
 	return int(result.RowsAffected), nil
 }
 
-func (repo *mysqlShoppingCartRepository) IsCartExist(id int) (bool, int, int) {
+func (repo *mysqlShoppingCartRepository) IsCartNotExist(id int) (bool, shoppingcarts.Core) {
 	var dataShoppingCart ShoppingCart
 	result := repo.db.Model(&ShoppingCart{}).Where("status = ? AND user_id = ?", "Wish List", id).First(&dataShoppingCart)
 	if result.RowsAffected == 0 {
-		return true, 0, 0
+		return true, dataShoppingCart.toCore()
 	}
-	return false, int(dataShoppingCart.TotalQuantity), int(dataShoppingCart.TotalPrice)
+	return false, dataShoppingCart.toCore()
 }
