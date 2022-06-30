@@ -75,7 +75,7 @@ func (h *ShoppingCartHandler) AddCart(c echo.Context) error {
 	priceInt, _ := strconv.Atoi(price)
 	var cart = _requestShoppingCart.ShoppingCart{
 		TotalQuantity: uint(quantitiyInt),
-		TotalPrice:    uint(priceInt) * uint(quantitiyInt),
+		TotalPrice:    uint(priceInt),
 		Status:        "Wish List",
 		UserID:        idToken,
 	}

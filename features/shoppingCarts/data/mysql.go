@@ -51,7 +51,7 @@ func (repo *mysqlShoppingCartRepository) UpdatedStatusCart(id int, status string
 
 func (repo *mysqlShoppingCartRepository) UpdatedCart(idUser int, data shoppingcarts.Core) (shoppingcarts.Core, int, error) {
 	var dataShoppingCart = fromCore(data)
-	result := repo.db.Model(&ShoppingCart{}).Where("status = ? AND user_id = ?", "Wish List", idUser).Updates(&dataShoppingCart)
+	result := repo.db.Model(&ShoppingCart{}).Where("status = ? AND user_id = ?", "Wish List", idUser).Updates(&dataShoppingCart).First(&dataShoppingCart)
 	if result.Error != nil {
 		return dataShoppingCart.toCore(), 0, result.Error
 	}

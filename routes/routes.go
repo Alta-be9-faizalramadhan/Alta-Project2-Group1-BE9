@@ -32,7 +32,7 @@ func New(presenter factory.Presenter) *echo.Echo {
 	e.PUT("books/:id", presenter.BookPresenter.UpdatedBook, middlewares.JWTMiddleware())
 	e.DELETE("books/:id", presenter.BookPresenter.DeleteBookById, middlewares.JWTMiddleware())
 
-	e.POST("carts", presenter.ShoppingCartPresenter.AddCart, middlewares.JWTMiddleware())
+	e.POST("carts/:idBook", presenter.ShoppingCartPresenter.AddCart, middlewares.JWTMiddleware())
 	e.PUT("carts", presenter.ShoppingCartPresenter.UpdatedStatusCart, middlewares.JWTMiddleware())
 
 	e.GET("orders/:id", presenter.ShoppingCartPresenter.GetAllHistoryOrder, middlewares.JWTMiddleware())
@@ -40,7 +40,7 @@ func New(presenter factory.Presenter) *echo.Echo {
 	e.GET("orderdetails/:idcart", presenter.ShoppingCartDetailPresenter.GetAllCartDetails, middlewares.JWTMiddleware())
 	e.POST("orderdetails", presenter.ShoppingCartDetailPresenter.InsertCartDetails, middlewares.JWTMiddleware())
 	e.DELETE("orderdetails/:idcart", presenter.ShoppingCartDetailPresenter.DeleteCartDetails, middlewares.JWTMiddleware())
-	e.PUT("orderdetails/:idcart", presenter.ShoppingCartDetailPresenter.UpdateCartDetails, middlewares.JWTMiddleware())
+	e.PUT("orderdetails", presenter.ShoppingCartDetailPresenter.UpdateCartDetails, middlewares.JWTMiddleware())
 
 	e.GET("categories", presenter.CategoryPresenter.GetAllCategory)
 

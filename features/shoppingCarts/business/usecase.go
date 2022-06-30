@@ -26,6 +26,7 @@ func (uc *shoppingCartUsecase) CreateCart(idUser int, idBook int, data shoppingc
 	cond, shoppingCart := uc.shoppingCartData.IsCartNotExist(idUser)
 	if cond {
 		var idShoppingCart int
+		data.TotalPrice = data.TotalPrice * data.TotalQuantity
 		idShoppingCart, rowSC, errSC = uc.shoppingCartData.InsertNewCart(data)
 		if errSC != nil {
 			return 0, errSC
@@ -48,33 +49,41 @@ func (uc *shoppingCartUsecase) CreateCart(idUser int, idBook int, data shoppingc
 		}
 		return rowSC, nil
 	} else {
+		var quantity = data.TotalQuantity
+		var price = data.TotalPrice
 		var updates = shoppingcarts.Core{
 			TotalQuantity: data.TotalQuantity + shoppingCart.TotalQuantity,
-			TotalPrice:    data.TotalPrice + shoppingCart.TotalPrice,
+			TotalPrice:    shoppingCart.TotalPrice + (data.TotalPrice * data.TotalQuantity),
 		}
 		data, rowSC, errSC := uc.shoppingCartData.UpdatedCart(idUser, updates)
 		if errSC != nil {
 			return 0, errSC
 		}
-		var product = shoppingcartdetails.Core{
-			QuantityBuyBook: data.TotalQuantity,
-			TotalPriceBook:  data.TotalPrice,
-			Book: shoppingcartdetails.Book{
-				ID:    idBook,
-				Price: (data.TotalPrice / data.TotalQuantity),
-			},
-			ShoppingCart: shoppingcartdetails.ShoppingCart{
-				ID:     data.ID,
-				UserID: uint(idUser),
-			},
-		}
-		if uc.shoppingCartDetailData.IsBookNotInCartDetail(idBook, data.ID) {
+		cond, productDetail := uc.shoppingCartDetailData.IsBookNotInCartDetail(idBook, data.ID)
+
+		if cond {
+			var product = shoppingcartdetails.Core{
+				QuantityBuyBook: quantity,
+				TotalPriceBook:  price,
+				Book: shoppingcartdetails.Book{
+					ID:    idBook,
+					Price: (data.TotalPrice / data.TotalQuantity),
+				},
+				ShoppingCart: shoppingcartdetails.ShoppingCart{
+					ID:     data.ID,
+					UserID: uint(idUser),
+				},
+			}
 			_, err := uc.shoppingCartDetailData.InsertCartDetails(product)
 			if err != nil {
 				return 0, err
 			}
 		} else {
-			_, err := uc.shoppingCartDetailData.PutCartDetails(data.ID, product)
+			var product = shoppingcartdetails.Core{
+				QuantityBuyBook: productDetail.QuantityBuyBook + quantity,
+				TotalPriceBook:  productDetail.TotalPriceBook + (price * quantity),
+			}
+			_, err := uc.shoppingCartDetailData.PutCartDetails(data.ID, idBook, product)
 			if err != nil {
 				return 0, err
 			}
