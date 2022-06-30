@@ -14,6 +14,9 @@ type mockShoppingCartData struct{}
 func (repo mockShoppingCartData) SelectAllOrder(id int, limit int, offset int) ([]shoppingcarts.Core, error) {
 	return []shoppingcarts.Core{{ID: 1, Status: "Done", TotalQuantity: 1, TotalPrice: 150000, User: shoppingcarts.User{ID: 1, UserName: "Aldi"}}}, nil
 }
+func (repo mockShoppingCartData) SelectOrder(idUser int) (shoppingcarts.Core, error) {
+	return shoppingcarts.Core{ID: 1, Status: "Wish List", TotalQuantity: 1, TotalPrice: 150000, User: shoppingcarts.User{ID: 1, UserName: "Aldi"}}, nil
+}
 func (repo mockShoppingCartData) InsertNewCart(data shoppingcarts.Core) (int, int, error) {
 	return 1, 1, nil
 }
@@ -31,6 +34,9 @@ type mockShoppingCartDataFailed struct{}
 
 func (repo mockShoppingCartDataFailed) SelectAllOrder(id int, limit int, offset int) ([]shoppingcarts.Core, error) {
 	return nil, fmt.Errorf("Failed to select data")
+}
+func (repo mockShoppingCartDataFailed) SelectOrder(idUser int) (shoppingcarts.Core, error) {
+	return shoppingcarts.Core{}, fmt.Errorf("Failed to select data")
 }
 func (repo mockShoppingCartDataFailed) InsertNewCart(data shoppingcarts.Core) (int, int, error) {
 	return 0, 0, fmt.Errorf("Failed to insert data")
@@ -53,6 +59,9 @@ func (repo mockShoppingCartDetailData) InsertCartDetails(data shoppingcartdetail
 func (repo mockShoppingCartDetailData) SelectAllCartDetails(id, limit, offset int) ([]shoppingcartdetails.Core, error) {
 	return []shoppingcartdetails.Core{{ID: 1, Book: shoppingcartdetails.Book{ID: 1, Title: "Harry Potter", Price: 150000}, QuantityBuyBook: 1, TotalPriceBook: 150000, ShoppingCart: shoppingcartdetails.ShoppingCart{ID: 1, UserID: 1}}}, nil
 }
+func (repo mockShoppingCartDetailData) SelectCartDetail(idCart int, idBook int) (shoppingcartdetails.Core, error) {
+	return shoppingcartdetails.Core{ID: 1, Book: shoppingcartdetails.Book{ID: 1, Title: "Harry Potter", Price: 150000}, QuantityBuyBook: 1, TotalPriceBook: 150000, ShoppingCart: shoppingcartdetails.ShoppingCart{ID: 1, UserID: 1}}, nil
+}
 func (repo mockShoppingCartDetailData) DeleteCartDetails(idCart int) (row int, err error) {
 	return 1, nil
 }
@@ -70,6 +79,9 @@ func (repo mockShoppingCartDetailDataFailed) InsertCartDetails(data shoppingcart
 }
 func (repo mockShoppingCartDetailDataFailed) SelectAllCartDetails(id, limit, offset int) ([]shoppingcartdetails.Core, error) {
 	return nil, fmt.Errorf("Failed to select data")
+}
+func (repo mockShoppingCartDetailDataFailed) SelectCartDetail(idCart int, idBook int) (shoppingcartdetails.Core, error) {
+	return shoppingcartdetails.Core{}, fmt.Errorf("Failed to select data")
 }
 func (repo mockShoppingCartDetailDataFailed) DeleteCartDetails(idCart int) (row int, err error) {
 	return 0, fmt.Errorf("Failed to delete data")
@@ -97,7 +109,7 @@ func TestGetHistoryOrder(t *testing.T) {
 	})
 }
 
-func TestUpdateStatus(t *testing.T) {
+func TestUpdateStatusCart(t *testing.T) {
 	t.Run("Test Update Status Success", func(t *testing.T) {
 		shoppingCartBusiness := NewShoppingCartBusiness(mockShoppingCartData{}, mockShoppingCartDetailData{})
 		result, err := shoppingCartBusiness.UpdatedStatusCart(1, "Done")
@@ -116,17 +128,48 @@ func TestCreateCart(t *testing.T) {
 	t.Run("Test Create Cart When Cart is Not Empty Success", func(t *testing.T) {
 		shoppingCartBusiness := NewShoppingCartBusiness(mockShoppingCartData{}, mockShoppingCartDetailData{})
 		var product = shoppingcarts.Core{}
-		idCart, idBook, err := shoppingCartBusiness.CreateCart(1, 1, product)
+		idCart, rowSC, err := shoppingCartBusiness.CreateCart(1, 1, product)
 		assert.Nil(t, err)
-		assert.Equal(t, 1, idBook)
+		assert.Equal(t, 1, rowSC)
 		assert.Equal(t, 1, idCart)
 	})
 	t.Run("Test Create Cart When Cart is Empty Success", func(t *testing.T) {
 		shoppingCartBusiness := NewShoppingCartBusiness(mockShoppingCartData{}, mockShoppingCartDetailData{})
 		var product = shoppingcarts.Core{}
-		idCart, idBook, err := shoppingCartBusiness.CreateCart(1, 1, product)
+		idCart, rowSC, err := shoppingCartBusiness.CreateCart(1, 1, product)
 		assert.Nil(t, err)
-		assert.Equal(t, 1, idBook)
+		assert.Equal(t, 1, rowSC)
 		assert.Equal(t, 1, idCart)
+	})
+	t.Run("Test Create Cart When Cart is Not Empty Failed", func(t *testing.T) {
+		shoppingCartBusiness := NewShoppingCartBusiness(mockShoppingCartData{}, mockShoppingCartDetailDataFailed{})
+		var product = shoppingcarts.Core{}
+		idCart, rowSC, err := shoppingCartBusiness.CreateCart(1, 1, product)
+		assert.NotNil(t, err)
+		assert.Equal(t, 0, rowSC)
+		assert.Equal(t, 0, idCart)
+	})
+	t.Run("Test Create Cart When Cart is Empty Failed", func(t *testing.T) {
+		shoppingCartBusiness := NewShoppingCartBusiness(mockShoppingCartDataFailed{}, mockShoppingCartDetailDataFailed{})
+		var product = shoppingcarts.Core{}
+		idCart, rowSC, err := shoppingCartBusiness.CreateCart(1, 1, product)
+		assert.NotNil(t, err)
+		assert.Equal(t, 0, rowSC)
+		assert.Equal(t, 0, idCart)
+	})
+}
+
+func TestUpdatedCart(t *testing.T) {
+	t.Run("Test Update Cart Success", func(t *testing.T) {
+		shoppingCartBusiness := NewShoppingCartBusiness(mockShoppingCartData{}, mockShoppingCartDetailData{})
+		rowSC, err := shoppingCartBusiness.UpdatedCart(1, 1, 1, 1, 150000)
+		assert.Nil(t, err)
+		assert.Equal(t, 1, rowSC)
+	})
+	t.Run("Test Update Cart Failed", func(t *testing.T) {
+		shoppingCartBusiness := NewShoppingCartBusiness(mockShoppingCartDataFailed{}, mockShoppingCartDetailDataFailed{})
+		rowSC, err := shoppingCartBusiness.UpdatedCart(1, 1, 1, 1, 150000)
+		assert.NotNil(t, err)
+		assert.Equal(t, 0, rowSC)
 	})
 }
