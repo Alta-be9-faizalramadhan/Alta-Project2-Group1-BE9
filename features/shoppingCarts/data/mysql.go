@@ -48,7 +48,7 @@ func (repo *mysqlShoppingCartRepository) InsertNewCart(data shoppingcarts.Core) 
 }
 
 func (repo *mysqlShoppingCartRepository) UpdatedStatusCart(id int, status string) (int, error) {
-	result := repo.db.Model(&ShoppingCart{}).Where("status = ? AND user_id = ?", "Wish List", id).First(&ShoppingCart{}).Update("status", "Done")
+	result := repo.db.Model(&ShoppingCart{}).Where("status = ? AND user_id = ?", "Wish List", id).First(&ShoppingCart{}).Update("status", status)
 	if result.Error != nil {
 		return 0, result.Error
 	}

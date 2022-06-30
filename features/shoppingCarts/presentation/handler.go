@@ -108,7 +108,8 @@ func (h *ShoppingCartHandler) UpdatedStatusCart(c echo.Context) error {
 			"message": "unauthorized",
 		})
 	}
-	result, err := h.shoppingCartBusiness.UpdatedStatusCart(idToken, "Done")
+	status := c.FormValue("status")
+	result, err := h.shoppingCartBusiness.UpdatedStatusCart(idToken, status)
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, map[string]interface{}{
 			"message": "failed to updated status",
