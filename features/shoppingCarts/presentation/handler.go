@@ -123,3 +123,49 @@ func (h *ShoppingCartHandler) UpdatedStatusCart(c echo.Context) error {
 		"message": "success updated status",
 	})
 }
+
+func (h *ShoppingCartHandler) UpdatedCart(c echo.Context) error {
+	idToken, errToken := middlewares.ExtractToken(c)
+	if errToken != nil {
+		c.JSON(http.StatusBadRequest, map[string]interface{}{
+			"message": "invalid token",
+		})
+	}
+	if idToken == 0 {
+		return c.JSON(http.StatusUnauthorized, map[string]interface{}{
+			"message": "unauthorized",
+		})
+	}
+	idCart := c.QueryParam("idCart")
+	idCartInt, errCart := strconv.Atoi(idCart)
+	if errCart != nil {
+		return c.JSON(http.StatusBadRequest, map[string]interface{}{
+			"message": "failed to recognized id cart",
+		})
+	}
+	idBook := c.QueryParam("idBook")
+	idBookInt, errBook := strconv.Atoi(idBook)
+	if errBook != nil {
+		return c.JSON(http.StatusBadRequest, map[string]interface{}{
+			"message": "failed to recognized id book",
+		})
+	}
+	quantity := c.FormValue("quantity")
+	quantitiyInt, _ := strconv.Atoi(quantity)
+	price := c.FormValue("price")
+	priceInt, _ := strconv.Atoi(price)
+	result, err := h.shoppingCartBusiness.UpdatedCart(idCartInt, idToken, idBookInt, quantitiyInt, priceInt)
+	if err != nil {
+		return c.JSON(http.StatusBadRequest, map[string]interface{}{
+			"message": "failed to update shopping cart details",
+		})
+	}
+	if result == 0 {
+		return c.JSON(http.StatusInternalServerError, map[string]interface{}{
+			"message": "failed to update shopping cart details",
+		})
+	}
+	return c.JSON(http.StatusOK, map[string]interface{}{
+		"message": "success update data shopping cart details",
+	})
+}

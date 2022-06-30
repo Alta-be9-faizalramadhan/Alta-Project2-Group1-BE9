@@ -26,6 +26,15 @@ func (repo *mysqlShoppingCartRepository) SelectAllOrder(id int, limit int, offse
 	return toCoreList(dataShoppingCart), nil
 }
 
+func (repo *mysqlShoppingCartRepository) SelectOrder(idUser int) (shoppingcarts.Core, error) {
+	var dataShoppingCart ShoppingCart
+	result := repo.db.Model(&ShoppingCart{}).Where("user_id = ? AND status = ?", idUser, "wish list").First(&dataShoppingCart)
+	if result.Error != nil {
+		return shoppingcarts.Core{}, result.Error
+	}
+	return dataShoppingCart.toCore(), nil
+}
+
 func (repo *mysqlShoppingCartRepository) InsertNewCart(data shoppingcarts.Core) (int, int, error) {
 	cart := fromCore(data)
 	result := repo.db.Create(&cart)

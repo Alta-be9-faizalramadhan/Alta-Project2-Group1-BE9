@@ -32,6 +32,7 @@ type Business interface {
 
 type Data interface {
 	SelectAllCartDetails(idCart, limit, offset int) (data []Core, err error)
+	SelectCartDetail(idCart int, idBook int) (data Core, err error)
 	InsertCartDetails(data Core) (row int, err error)
 	DeleteCartDetails(idCart int) (row int, err error)
 	PutCartDetails(idCart int, idBook int, data Core) (row int, err error)
