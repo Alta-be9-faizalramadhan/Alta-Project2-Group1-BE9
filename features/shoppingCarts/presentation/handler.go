@@ -79,7 +79,7 @@ func (h *ShoppingCartHandler) AddCart(c echo.Context) error {
 		Status:        "Wish List",
 		UserID:        idToken,
 	}
-	result, err := h.shoppingCartBusiness.CreateCart(idToken, idBookInt, _requestShoppingCart.ToCore(cart))
+	idCart, result, err := h.shoppingCartBusiness.CreateCart(idToken, idBookInt, _requestShoppingCart.ToCore(cart))
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, map[string]interface{}{
 			"message": "failed insert to cart",
@@ -92,6 +92,7 @@ func (h *ShoppingCartHandler) AddCart(c echo.Context) error {
 	}
 	return c.JSON(http.StatusOK, map[string]interface{}{
 		"message": "success insert to cart",
+		"id_cart": idCart,
 	})
 }
 
