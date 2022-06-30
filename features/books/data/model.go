@@ -19,6 +19,7 @@ type Book struct {
 	Sold        uint   `json:"sold" form:"sold"`
 	Description string `json:"description" form:"description"`
 	UserID      uint   `json:"user_id" form:"user_id"`
+	ImageURL    string `json:"image_url" form:"image_url"`
 	User        User
 }
 
@@ -41,6 +42,7 @@ func (data *Book) toCore() books.Core {
 		BookPage:    data.BookPage,
 		Sold:        data.Sold,
 		Description: data.Description,
+		ImageURL:    data.ImageURL,
 		CreatedAt:   data.CreatedAt,
 		UpdatedAt:   data.UpdatedAt,
 		User: books.User{
@@ -71,5 +73,6 @@ func fromCore(core books.Core) Book {
 		Sold:        core.Sold,
 		Description: core.Description,
 		UserID:      uint(core.User.ID),
+		ImageURL:    core.ImageURL,
 	}
 }

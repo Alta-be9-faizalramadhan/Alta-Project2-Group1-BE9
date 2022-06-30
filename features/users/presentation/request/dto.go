@@ -10,6 +10,7 @@ type User struct {
 	Password string `json:"password" form:"password"`
 	Alamat   string `json:"alamat" form:"alamat"`
 	NoTelp   string `json:"notelp" form:"notelp"`
+	ImageURL string `json:"image_url" form:"image_url"`
 }
 
 func ToCore(req User) users.Core {
@@ -19,5 +20,6 @@ func ToCore(req User) users.Core {
 		Password: req.Password,
 		Alamat:   req.Alamat,
 		NoTelp:   req.NoTelp,
+		ImageURL: req.ImageURL,
 	}
 }

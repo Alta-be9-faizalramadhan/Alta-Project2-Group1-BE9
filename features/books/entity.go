@@ -16,6 +16,7 @@ type Core struct {
 	BookPage    string
 	Sold        uint
 	Description string
+	ImageURL    string
 	CreatedAt   time.Time
 	UpdatedAt   time.Time
 	User        User

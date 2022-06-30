@@ -37,6 +37,7 @@ func (repo *mysqlUserRepository) InsertData(input users.Core) (row int, err erro
 		Password: string(passwordHash),
 		Alamat:   input.Alamat,
 		NoTelp:   input.NoTelp,
+		ImageURL: input.ImageURL,
 	}
 	result := repo.db.Create(&user)
 	if result.Error != nil {

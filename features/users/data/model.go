@@ -13,6 +13,7 @@ type User struct {
 	Password string `json:"password"`
 	Alamat   string `json:"alamat"`
 	NoTelp   string `json:"notelp"`
+	ImageURL string `json:"image_url"`
 }
 
 func (data *User) toCore() users.Core {
@@ -23,6 +24,7 @@ func (data *User) toCore() users.Core {
 		Password:  data.Password,
 		Alamat:    data.Alamat,
 		NoTelp:    data.NoTelp,
+		ImageURL:  data.ImageURL,
 		CreatedAt: data.CreatedAt,
 		UpdatedAt: data.UpdatedAt,
 	}
@@ -43,5 +45,6 @@ func fromCore(core users.Core) User {
 		Password: core.Password,
 		Alamat:   core.Alamat,
 		NoTelp:   core.NoTelp,
+		ImageURL: core.ImageURL,
 	}
 }
