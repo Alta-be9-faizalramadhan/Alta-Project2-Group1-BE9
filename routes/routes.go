@@ -43,5 +43,6 @@ func New(presenter factory.Presenter) *echo.Echo {
 	e.PUT("orderdetails/:idcart", presenter.ShoppingCartDetailPresenter.UpdateCartDetails, middlewares.JWTMiddleware())
 
 	e.GET("categories", presenter.CategoryPresenter.GetAllCategory)
+
 	return e
 }
