@@ -96,3 +96,23 @@ func (uc *shoppingCartUsecase) UpdatedStatusCart(id int, status string) (row int
 	row, err = uc.shoppingCartData.UpdatedStatusCart(id, status)
 	return row, err
 }
+
+func (uc *shoppingCartUsecase) UpdatedCart(idCart int, idUser int, idBook int, quantity int, price int) (rowSC int, errSC error) {
+	dataBefore, _ := uc.shoppingCartDetailData.SelectCartDetail(idCart, idBook)
+	quantityBefore := dataBefore.QuantityBuyBook
+	priceBefore := dataBefore.TotalPriceBook
+	data := shoppingcartdetails.Core{
+		QuantityBuyBook: uint(quantity),
+		TotalPriceBook:  uint(price) * uint(quantity),
+	}
+	_, err := uc.shoppingCartDetailData.PutCartDetails(idCart, idBook, data)
+	if err != nil {
+		return 0, err
+	}
+	var dataCart, _ = uc.shoppingCartData.SelectOrder(idUser)
+	totalPrice := dataCart.TotalPrice
+	dataCart.TotalPrice = (totalPrice - priceBefore) + uint(price*quantity)
+	dataCart.TotalQuantity = (dataCart.TotalQuantity - quantityBefore) + uint(quantity)
+	_, row, err := uc.shoppingCartData.UpdatedCart(idUser, dataCart)
+	return row, err
+}

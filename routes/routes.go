@@ -33,13 +33,14 @@ func New(presenter factory.Presenter) *echo.Echo {
 	e.DELETE("books/:id", presenter.BookPresenter.DeleteBookById, middlewares.JWTMiddleware())
 
 	e.POST("carts/:idBook", presenter.ShoppingCartPresenter.AddCart, middlewares.JWTMiddleware())
-	e.PUT("carts", presenter.ShoppingCartPresenter.UpdatedStatusCart, middlewares.JWTMiddleware())
+	e.PUT("carts", presenter.ShoppingCartPresenter.UpdatedCart, middlewares.JWTMiddleware())
 
+	e.PUT("orders", presenter.ShoppingCartPresenter.UpdatedStatusCart, middlewares.JWTMiddleware())
 	e.GET("orders/:idUser", presenter.ShoppingCartPresenter.GetAllHistoryOrder, middlewares.JWTMiddleware())
 
 	e.GET("orderdetails/:idcart", presenter.ShoppingCartDetailPresenter.GetAllCartDetails, middlewares.JWTMiddleware())
 	e.DELETE("orderdetails/:idcart", presenter.ShoppingCartDetailPresenter.DeleteCartDetails, middlewares.JWTMiddleware())
-	e.PUT("orderdetails", presenter.ShoppingCartDetailPresenter.UpdateCartDetails, middlewares.JWTMiddleware())
+	//e.PUT("orderdetails", presenter.ShoppingCartDetailPresenter.UpdateCartDetails, middlewares.JWTMiddleware())
 
 	e.GET("categories", presenter.CategoryPresenter.GetAllCategory)
 

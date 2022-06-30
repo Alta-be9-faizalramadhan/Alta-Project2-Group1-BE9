@@ -17,6 +17,7 @@ type Business interface {
 	GetHistoryOrder(id int, limit int, offset int) (data []Core, err error)
 	CreateCart(idUser int, idBook int, data Core) (idCart int, rowSC int, errSC error)
 	UpdatedStatusCart(id int, status string) (row int, err error)
+	UpdatedCart(idCart int, idUser int, idBook int, quantity int, price int) (rowSC int, errSC error)
 }
 
 type Data interface {
@@ -25,4 +26,5 @@ type Data interface {
 	UpdatedStatusCart(id int, status string) (row int, err error)
 	IsCartNotExist(id int) (cond bool, data Core)
 	UpdatedCart(idUser int, dataInput Core) (dataUpdated Core, row int, err error)
+	SelectOrder(idUser int) (data Core, err error)
 }

@@ -25,6 +25,14 @@ func (repo *mysqlShoppingCartDetailRepository) SelectAllCartDetails(id, limit, o
 	}
 	return toCoreList(dataShoppingCartDetails), nil
 }
+func (repo *mysqlShoppingCartDetailRepository) SelectCartDetail(idCart int, idBook int) (shoppingcartdetails.Core, error) {
+	var dataShoppingCartDetails ShoppingCartDetail
+	result := repo.db.Model(&ShoppingCartDetail{}).Where("shopping_cart_id = ? AND book_id = ?", idCart, idBook).First(&dataShoppingCartDetails)
+	if result.Error != nil {
+		return shoppingcartdetails.Core{}, result.Error
+	}
+	return dataShoppingCartDetails.toCore(), nil
+}
 
 func (repo *mysqlShoppingCartDetailRepository) InsertCartDetails(data shoppingcartdetails.Core) (row int, err error) {
 	shoppingcartdetail := fromCore(data)
