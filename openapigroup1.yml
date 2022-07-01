@@ -1,0 +1,1242 @@
+openapi: 3.0.3
+info:
+  title: PROJECT GROUP1
+  description: Aplikasi Book Online Shop
+  contact:
+    name: Group1
+    email: support@alterra.id
+  license:
+    name: Apache 2.0
+    url: https://www.apache.org/licenses/LICENSE-2.0.html
+  version: '1.0.0'
+servers:
+  - description: SwaggerHub API Auto Mocking
+    url: https://virtserver.swaggerhub.com/faizalsundara/project-group-1/1.0.0
+  - url: http://34.125.69.172/
+    description: requestMethod
+tags:
+  - name: Auth
+    description: Authentication
+  - name: Users
+    description: User data management
+  - name: Books
+    description: Book data management
+  - name: Categories
+    description: Book Category Management
+  - name: Shoppingcarts
+    description: Order Management
+  - name: Shoppingcartdetails
+    description: Order Management
+paths:
+  /login:
+    post:
+      tags:
+        - Auth
+      summary: login user
+      description: Login user bisa digunakan ketika user sudah registrasi
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/requestLogin'
+            examples:
+              userData1:
+                description: "Example data  user 1"
+                value: {
+                  email: "andrigunawan@gmail.com",
+                  password: "andri12"
+                }
+              userData2:
+                description: "Example data  user 2"
+                value: {
+                  email: "cahyo@gmail.com",
+                  password: "Cahyo12"
+                }
+      responses:
+        '200':
+          description: Success Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/responseLoginSuccess'
+              examples:
+                responseData1:
+                  description: response success 1
+                  value: {
+              
+                    message: "Login Success",
+                    data: {
+                      "user_id": 1,
+                      "user_name": "andri gunawan",
+                      "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdXRob3JpemVkIjp0cnVlLCJleHAiOjE2MzgzMjYxODAsInVzZXJJZCI6MSwidXNlcm5hbWUiOiJhZG1pbiJ9.AebFR-oQjUSOMez2ucDWkiMrS2eQIPmcYm5c71qZ_co"
+                    }
+                  }
+                responseData2:
+                  description: response success 2
+                  value: {
+                    "message": "Login Success",
+                    "data": {
+                      user_id: 2,
+                      user_name: "cahyo",
+                      token: "AyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdXRob3JpemVkIjp0cnVlLCJleHAiOjE2MzgzMjYxODAsInVzZXJJZCI6MSwidXNlcm5hbWUiOiJhZG1pbiJ9.AebFR-oQjUSOMez2ucDWkiMrS2eQIPmcYm5c71qZ_co"
+                    }
+                  }
+        '400':
+          description: Failed Response
+          content:
+            application/json:
+              examples:
+                responseData1:
+                  description: response failed 1
+                  value: {
+                    message: "email or password incorrect"
+                  }
+                responseData2:
+                  description: response failed 2
+                  value: {
+                    message: "email or password incorrect"
+                  }
+  /users:
+    post:
+      tags:
+        - Users
+      summary: Registration User
+      description: Saat registrasi user harus input semua field
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/requestRegistrasi'
+            examples:
+              userData1:
+                description: "Example data  user 1"
+                value: {
+                  username: "andri gunawan",
+                  email: "andrigunawan@gmail.com",
+                  password: "andri12",
+                  alamat: "Jln. Baru No.4, Jakarta - Indonesia",
+                  notelp: "08123247689",
+                  file: profile1.jpg
+                }
+              userData2:
+                description: "Example data  user 2"
+                value: {
+                  username: "cahyo",
+                  email: "cahyo@gmail.com",
+                  password: "cahyo12",
+                  alamat: "Jln. Lama No.5, Jakarta - Indonesia",
+                  notelp: "082000123321",
+                  file: profile2.jpg
+                }
+      responses:
+        '200':
+          description: Success Response
+          content:
+            multipart/form-data:
+              examples:
+                responseData1:
+                  description: response success 1
+                  value: {
+                    message: "success to insert data",
+                  }
+                responseData2:
+                  description: response success 2
+                  value: {
+                    message: "success to insert data",
+                  }
+        '400':
+          description: Failed Response
+          content:
+            multipart/form-data:
+              examples:
+                responseData1:
+                  description: response failed 1
+                  value: {
+                    message: "all input data must be filled",
+                  }
+                responseData2:
+                  description: response failed 2
+                  value: {
+                    message: "all input data must be filled",
+                  }
+  /users/{iduser}:
+    get:
+      tags:
+        - Users
+      summary: for get User By Id
+      description: Bisa diaplikasikan ketika user ingin melihat profilnya
+      security:
+        - JWTAuth: []
+      parameters:
+        - in: path
+          name: iduser
+          required: true
+          schema:
+            type: number
+            example: 1
+          description: user_id
+      responses:
+        '200':
+          description: Success Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/responseGetUserSuccess'
+              examples:
+                responseData1:
+                  description: response success 1
+                  value: {
+              
+                    message: "success",
+                    data: {
+                     "id"     : 1,
+                     "name": "andri gunawan",
+                     "email": "andrigunawan@gmail.com",
+                     "alamat": "Jln. Baru No.4, Jakarta - Indonesia",
+                     "notelp": "08123247689",
+                     "created_at": "2022-06-27T05:56:50.248Z",
+                     "image_url": "https://storage.googleapis.com/bucket-project-2/profil1.jpg"
+                    }
+                  }
+        '400':
+          description: Failed Response
+          content:
+            application/json:
+              examples:
+                responseData1:
+                  description: response success 1
+                  value: {
+                    message: "Bad Request",
+                  }
+                responseData2:
+                  description: response success 2
+                  value: {
+                    message: "Bad Request",
+                  }
+    put:
+      tags:
+        - Users
+      summary: for put User By Id
+      description: Bisa diaplikasikan ketika user ingin update profilnya & semua field tidak boleh kosong
+      security:
+        - JWTAuth: []     
+      parameters:
+        - in: path
+          name: iduser
+          required: true
+          schema:
+            type: number
+            example: 1
+          description: user_id
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/requestUpdate'
+            examples:
+              userData1:
+                description: "Example data  user 1"
+                value: {
+                  username: "andri gunawan",
+                  email: "andrigunawan@gmail.com",
+                  password: "andri12",
+                  alamat: "Jln. Baru No.4, Jakarta - Indonesia",
+                  notelp: "08123247689",
+                  file: profile3.jpg
+                }
+              userData2:
+                description: "Example data  user 2"
+                value: {
+                  username: "cahyo",
+                  email: "cahyo@gmail.com",
+                  password: "cahyo12",
+                  alamat: "Jln. Lama No.5, Jakarta - Indonesia",
+                  notelp: "082000123321",
+                  file: "profile4.jpg"
+                }
+      responses:
+        '200':
+          description: Success Response
+          content:
+            application/json:
+              examples:
+                responseData1:
+                  description: response success 1
+                  value: {
+                    message: "success to insert data",
+                  }
+                responseData2:
+                  description: response success 2
+                  value: {
+                    message: "success to insert data",
+                  }
+        '400':
+          description: Failed Response
+          content:
+            application/json:
+              examples:
+                responseData1:
+                  description: response success 1
+                  value: {
+                    message: "failed to update data",
+                  }
+                responseData2:
+                  description: response success 2
+                  value: {
+                    message: "failed to update data",
+                  }
+
+    delete:
+      tags:
+        - Users
+      summary: for delete User By Id
+      description: Bisa diaplikasikan ketika user ingin melihat profilnya
+      security:
+        - JWTAuth: []
+      parameters:
+        - in: path
+          name: iduser
+          required: true
+          schema:
+            type: number
+            example: 1
+          description: user_id
+      responses:
+        '200':
+          description: Success Response
+          content:
+            application/json:
+              examples:
+                responseData1:
+                  description: response success 1
+                  value: {
+                    message: "success to delete",
+                  }
+        '400':
+          description: Failed Response
+          content:
+            application/json:
+              examples:
+                responseData1:
+                  description: response failed 1
+                  value: {
+                    message: "Bad Request",
+                  }
+                responseData2:
+                  description: response failed 2
+                  value: {
+                    message: "Bad Request",
+                  }
+  /books:
+    get:
+      tags:
+        - Books
+      description: Get All Book
+      # parameters:
+      #   - in: path
+      #     name: limit
+      #     required: true
+      #     schema:
+      #       type: number
+      #       example: 1
+      #     description: limit
+      #   - in: path
+      #     name: offset
+      #     required: true
+      #     schema:
+      #       type: number
+      #       example: 1
+      #     description: offset
+      responses:
+        '200':
+          description: Success Response get all book
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/responseAllBookSuccess'
+              examples:
+                responseData1:
+                  description: response success 1
+                  value: {
+
+                    message: "success",
+                    data: [{
+                      id: 1,
+                      title: "Harry Potter dan Batu Bertuah",
+                      author: "J. K. Rowling",
+                      publisher: "Gramedia Pustaka Utama",
+                      isbn: "5-4321-345-23",
+                      category: "Novel",
+                      price: 150000,
+                      stock: 3,
+                      book_page: "160",
+                      sold: 0,
+                      description: "Merupakan novel terlaris pada tahun 2010",
+                      created_at: "2022-06-26T18:35:01.231Z",
+                      "image_url": "https://storage.googleapis.com/bucket-project-2/download1.jpg",
+                      user: {
+                        id: 2,
+                        user_name: "Tyas"
+                      }
+                    }]
+                  }
+        '500':
+          description: Cannot get all book
+          content:
+            application/json:
+              examples:
+                responseData1:
+                  description: response failed 1
+                  value: {
+                   "message" : "failed to get all data",
+                  }
+    post:
+      tags:
+        - Books
+      description: Add new Book
+      security:
+        - JWTAuth: []
+      requestBody:
+            content:
+              multipart/form-data:
+                schema:
+                  $ref: '#/components/schemas/requestBook'
+                examples:
+                  bookData1:
+                    description: "Example book input"
+                    value: {
+                        title: "Harry Potter dan Ruang Rahasia",
+                        author: "J. K. Rowling",
+                        publisher: "Gramedia Pustaka Utama",
+                        isbn: "5-312-6621-43",
+                        category: "Novel",
+                        price: 150000,
+                        book_page: "160",
+                        stock: 3,
+                        user_id: 2,
+                        sold: 0,
+                        file: "download1.jpg",
+                        description: "Novel karya J.K. Rowling terlaris pada tahun 2010"
+                        }
+      responses:
+        '200':
+          description: Success Response
+          content:
+            multipart/form-data:
+              examples:
+                responseData1:
+                  description: response success 1
+                  value: {
+                    message: "success to insert book",
+                  }
+        '400':
+          description: Failed Response
+          content:
+            multipart/form-data:
+              examples:
+                responseData1:
+                  description: response failed 1
+                  value: {
+                    message: "all input data must be filled",
+                  }
+
+  /books/{idbook}:
+    get:
+      tags:
+        - Books
+      description: Get Book by idbook
+      parameters:
+        - in: path
+          name: idbook
+          required: true
+          schema:
+            type: number
+            example: 1
+          description: id book
+      responses:
+        '200':
+          description: Success Response get a book
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/responseBookSuccess'
+              examples:
+                responseData1:
+                  description: response success 1
+                  value: {
+
+
+                    message: "success",
+                    data: {
+                      id: 1,
+                      title: "Harry Potter dan Batu Bertuah",
+                      author: "J. K. Rowling",
+                      publisher: "Gramedia Pustaka Utama",
+                      isbn: "5-4321-345-23",
+                      category: "Novel",
+                      price: 150000,
+                      stock: 3,
+                      book_page: "160",
+                      sold: 0,
+                      description: "Merupakan novel terlaris pada tahun 2010",
+                      image_url : "https://storage.googleapis.com/bucket-project-2/download1.jpg",
+                      created_at: "2022-06-26T18:35:01.231Z",
+                      user: {
+                        id: 2,
+                        user_name: "Tyas"
+                      }
+                    }
+                  }
+        '400':
+          description: Failed Response
+          content:
+            application/json:
+              examples:
+                responseData1:
+                  description: response failed 1
+                  value: {
+                    message: "Bad Request",
+                  }
+    put:
+      tags:
+        - Books
+      description: Update book by id book
+      security:
+        - JWTAuth: []     
+      parameters:
+        - in: path
+          name: idbook
+          required: true
+          schema:
+            type: number
+            example: 1
+          description: book_id
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/requestUpdateBook'
+            examples:
+              userData1:
+                description: "Example data  user 1"
+                value: {
+                        title: "Harry Potter dan Ruang Rahasia",
+                        author: "J. K. Rowling",
+                        publisher: "Gramedia Pustaka Utama",
+                        isbn: "5-312-6621-43",
+                        category: "Novel",
+                        price: 150000,
+                        book_page: "160",
+                        stock: 3,
+                        user_id: 2,
+                        description: "Novel karya J.K. Rowling terlaris pada tahun 2010",
+                        image_url: "https://storage.googleapis.com/bucket-project-2/download2.jpg"
+                        }
+      responses:
+        '200':
+          description: Success Response
+          content:
+            application/json:
+              examples:
+                responseData1:
+                  description: response success 1
+                  value: {
+                    message: "success update data",
+                  }
+        '400':
+          description: Failed Response
+          content:
+            application/json:
+              examples:
+                responseData1:
+                  description: response success 1
+                  value: {
+                    message: "Bad Request",
+                  }
+  
+    delete:
+      tags:
+        - Books
+      description: Delete Book by id book
+      security:
+        - JWTAuth: []
+      parameters:
+        - in: path
+          name: idbook
+          required: true
+          schema:
+            type: number
+            example: 1
+          description: id_book
+      responses:
+        '200':
+          description: Success Response
+          content:
+            application/json:
+              examples:
+                responseData1:
+                  description: response success 1
+                  value: {
+                    message: "success delete data",
+                  }
+        '400':
+          description: Failed Response
+          content:
+            application/json:
+              examples:
+                responseData1:
+                  description: response failed 1
+                  value: {
+                    message: "Bad Request",
+                  }
+                
+  /books/filter/{category}:
+    get:
+      tags:
+        - Books
+      description: Get books by category
+      parameters:
+        - in: path
+          name: category
+          required: true
+          schema:
+            type: string
+            example: Novel
+          description: category
+      responses:
+        '200':
+          description: Success Response get a book
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/responseBookSuccess'
+              examples:
+                responseData1:
+                  description: response success 1
+                  value: {
+
+
+                    message: "success",
+                    data: {
+                      id: 1,
+                      title: "Harry Potter dan Batu Bertuah",
+                      author: "J. K. Rowling",
+                      publisher: "Gramedia Pustaka Utama",
+                      isbn: "5-4321-345-23",
+                      category: "Novel",
+                      price: 150000,
+                      stock: 3,
+                      book_page: "160",
+                      sold: 0,
+                      description: "Merupakan novel terlaris pada tahun 2010",
+                      image_url: "https://storage.googleapis.com/bucket-project-2/download2.jpg",
+                      created_at: "2022-06-26T18:35:01.231Z",
+                      user: {
+                        id: 2,
+                        user_name: "Tyas"
+                      }
+                    }
+                  }
+        '400':
+          description: Failed Response
+          content:
+            application/json:
+              examples:
+                responseData1:
+                  description: response failed 1
+                  value: {
+                    message: "Bad Request",
+                  }
+  /books/users:
+    get:
+      tags:
+        - Books
+      description: Get books by id from token
+      security:
+        - JWTAuth: []
+      responses:
+        '200':
+          description: Success Response get a book
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/responseBookSuccess'
+              examples:
+                responseData1:
+                  description: response success 1
+                  value: {
+
+
+                    message: "success",
+                    data: {
+                      id: 1,
+                      title: "Harry Potter dan Batu Bertuah",
+                      author: "J. K. Rowling",
+                      publisher: "Gramedia Pustaka Utama",
+                      isbn: "5-4321-345-23",
+                      category: "Novel",
+                      price: 150000,
+                      stock: 3,
+                      book_page: "160",
+                      sold: 0,
+                      description: "Merupakan novel terlaris pada tahun 2010",
+                      image_url: "https://storage.googleapis.com/bucket-project-2/download2.jpg",
+                      created_at: "2022-06-26T18:35:01.231Z",
+                      user: {
+                        id: 2,
+                        user_name: "Tyas"
+                      }
+                    }
+                  }
+        '400':
+          description: Failed Response
+          content:
+            application/json:
+              examples:
+                responseData1:
+                  description: response failed 1
+                  value: {
+                    message: "Bad Request",
+                  }
+  /categories:
+    get:
+      tags:
+        - Categories
+      description: Get Book by Category
+      responses:
+        '200':
+          description: Success Response get a book
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/responseBookSuccess'
+              examples:
+                responseData1:
+                  description: response success 1
+                  value: {
+
+
+                    message: "success",
+                    data: [
+                        {
+                        "name": "Biography"
+                        },
+                        {
+                        "name": "Comic"
+                        },
+                        {
+                        "name": "Encyclopedia"
+                        },
+                        {
+                        "name": "Magazine"
+                        },
+                        {
+                        "name": "Novel"
+                        },
+                        {
+                        "name": "Textbook"
+                        }
+                    ],
+                  }
+        '400':
+          description: Failed Response
+          content:
+            application/json:
+              examples:
+                responseData1:
+                  description: response failed 1
+                  value: {
+                    message: "Bad Request",
+                  }
+  /carts/{idbook}:
+    post:
+      tags:
+        - Shoppingcarts
+      description: Add to cart
+      security:
+        - JWTAuth: []
+      parameters:
+        - in: path
+          name: idbook
+          required: true
+          schema:
+            type: number
+            example: 1
+          description: id_book
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/requestShoppingCart'
+            examples:
+              shoppingCart1:
+                description: "Example cart input"
+                value: {
+                    quantity: 1,
+                    price: 150000,
+                }
+      responses:
+        '200':
+          description: Success Response
+          content:
+            application/json:
+              examples:
+                responseData1:
+                  description: response success 1
+                  value: {
+                    id_cart: 1,
+                    message: "success insert to cart",
+                  }
+        '400':
+          description: Failed Response
+          content:
+            application/json:
+              examples:
+                responseData1:
+                  description: response failed 1
+                  value: {
+                    message: "failed insert to cart",
+                  }
+  /orders:
+    put:
+      tags:
+        - Shoppingcarts
+      description: Update status cart(to pay cart)
+      security:
+        - JWTAuth: []
+      responses:
+        '200':
+          description: Success Response
+          content:
+            application/json:
+              examples:
+                responseData1:
+                  description: response success 1
+                  value: {
+                    message: "success updated status",
+                  }
+        '400':
+          description: Failed Response
+          content:
+            application/json:
+              examples:
+                responseData1:
+                  description: response failed 1
+                  value: {
+                    message: "failed to update status",
+                  }
+  /orders/{iduser}:
+    get:
+      tags:
+        - Shoppingcarts
+      description: Get checkout
+      security:
+        - JWTAuth: []
+      parameters:
+        - in: path
+          name: iduser
+          required: true
+          schema:
+            type: number
+            example: 1
+          description: user_id
+      responses:
+        '200':
+          description: Success Response 
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/responseCartSuccess'
+              examples:
+                responseData1:
+                  description: response success 1
+                  value: {
+
+
+                    message: "success",
+                    data: {
+                      id: 1,
+                      total_quantity: 1,
+                      total_price: 150000,
+                      status: "Done",
+                      user: {
+                        id: 1,
+                        user_name: "Tyas"
+                      }
+                    }
+                  }
+        '400':
+          description: Failed Response
+          content:
+            application/json:
+              examples:
+                responseData1:
+                  description: response failed 1
+                  value: {
+                    message: "Bad Request",
+                  }
+  /orderdetails/{idcart}:
+    get:
+      tags:
+        - Shoppingcartdetails
+      description: get cart details
+      security:
+        - JWTAuth: []
+      parameters:
+        - in: path
+          name: idcart
+          required: true
+          schema:
+            type: number
+            example: 2
+          description: cart_id
+      responses:
+        '200':
+          description: Success Response get a book
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/responseCartSuccess'
+              examples:
+                responseData1:
+                  description: response success 1
+                  value: {
+
+
+                    message: "success",
+                    data: {
+                      id: 1,
+                      quantity_buy_book: 1,
+                      total_price_book: 150000,
+                      created_at: "2022-06-30T16:33:58.079Z",
+                      book: {
+                        id: 2,
+                        title: "Harry Potter dan Batu Bertuah",
+                        price: 150000,
+                      },
+                      shopping_cart: {
+                        id: 2,
+                        user_id: 2,
+                      }
+                    }
+                  }
+        '400':
+          description: Failed Response
+          content:
+            application/json:
+              examples:
+                responseData1:
+                  description: response failed 1
+                  value: {
+                    message: "Bad Request",
+                  }
+
+    delete:
+      tags:
+        - Shoppingcartdetails
+      description: delete cart(cancel)
+      security:
+        - JWTAuth: []
+      parameters:
+        - in: path
+          name: idcart
+          required: true
+          schema:
+            type: number
+            example: 2
+          description: cart_id
+      responses:
+        '200':
+          description: Success Response
+          content:
+            application/json:
+              examples:
+                responseData1:
+                  description: response success 1
+                  value: {
+                    message: "success to delete shopping cart details",
+                  }
+        '400':
+          description: Failed Response
+          content:
+            application/json:
+              examples:
+                responseData1:
+                  description: response failed 1
+                  value: {
+                    message: "failed to delete shopping cart details",
+                  }
+  /orderdetails/{idcart}{idbook}:
+    put:
+      tags:
+        - Shoppingcartdetails
+      description: update cart
+      security:
+        - JWTAuth: []
+      parameters:
+        - in: path
+          name: idcart
+          required: true
+          schema:
+            type: number
+            example: 1
+          description: id_cart
+        - in: path
+          name: idbook
+          required: true
+          schema:
+            type: number
+            example: 10
+          description: id_book
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/requestShoppingCartDetail'
+            examples:
+              shoppingCart1:
+                description: "Example update orderdetails"
+                value: {
+                    quantity_buy_book: 1,
+                    total_price_book: 150000,
+                }
+      responses:
+        '200':
+          description: Success Response
+          content:
+            application/json:
+              examples:
+                responseData1:
+                  description: response success 1
+                  value: {
+                    message: "success update data shopping cart details",
+                  }
+        '400':
+          description: Failed Response
+          content:
+            application/json:
+              examples:
+                responseData1:
+                  description: response failed 1
+                  value: {
+                    message: "failed update data shopping cart details",
+                  }
+
+components:
+  securitySchemes:
+    JWTAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: "use Token"
+  schemas:
+    requestLogin:
+      type: object
+      properties:
+        "email":
+          type: string
+          minLength: 1
+        "password":
+          type: string
+          minLength: 1
+
+    responseLoginSuccess:
+      type: object
+      properties: {
+        
+        "message": {
+          type: string
+        },
+        "data":{
+          type: object
+        }
+      }
+
+    requestRegistrasi:
+      type: object
+      properties:
+        "username":
+          type: string
+          minLength: 1
+        "password":
+          type: string
+          minLength: 1
+        "email":
+          type: string
+          minLength: 1
+        "alamat":
+          type: string
+          minLength: 1
+        "notelp":
+          type: string
+          minLength: 1
+        "file":
+          type: string
+          minLength: 1
+
+
+    responseGetUserSuccess:
+      type: object
+      properties: {
+        
+        "message": {
+          type: string
+        },
+        "data":{
+          type: object
+        }
+      }
+
+    requestUpdate:
+      type: object
+      properties:
+        "username":
+          type: string
+          minLength: 1
+        "password":
+          type: string
+          minLength: 1
+        "email":
+          type: string
+          minLength: 1
+        "alamat":
+          type: string
+          minLength: 1
+        "notelp":
+          type: string
+          minLength: 1
+        "file":
+          type: string
+          minLength: 1
+
+    requestBook:
+      type: object
+      properties:
+        "title":
+          type: string
+          minLength: 1
+        "author":
+          type: string
+          minLength: 1
+        "publisher":
+          type: string
+          minLength: 1     
+        "isbn":
+          type: string
+          minLength: 1
+        "category":
+          type: string
+          minLength: 1
+        "price":
+          type: number
+          minLength: 1
+        "stock":
+          type: number
+          minLength: 1
+        "book_page":
+          type: string
+          minLength: 1
+        "description":
+          type: string
+          minLength: 1
+        "user_id":
+          type: number
+          minLength: 1
+        "file":
+          type: string
+          minLength: 1
+
+    responseAllBookSuccess:
+      type: object
+      properties: {
+
+        "message": {
+          type: string
+          },
+          "data":{
+            type: object
+          }
+      }
+
+    responseBookSuccess:
+      type: object
+      properties: {
+      
+        "message": {
+          type: string
+          },
+          "data":{
+            type: object
+            }
+      }
+
+    requestUpdateBook:
+      type: object
+      properties:
+        "title":
+          type: string
+          minLength: 1
+        "author":
+          type: string
+          minLength: 1
+        "publisher":
+          type: string
+          minLength: 1     
+        "isbn":
+          type: string
+          minLength: 1
+        "category":
+          type: string
+          minLength: 1
+        "price":
+          type: number
+          minLength: 1
+        "stock":
+          type: number
+          minLength: 1
+        "book_page":
+          type: string
+          minLength: 1
+        "description":
+          type: string
+          minLength: 1
+        "user_id":
+          type: number
+          minLength: 1
+        "sold":
+          type: number
+        "file":
+          type: string
+          minLength: 1
+
+    requestShoppingCart:
+      type: object
+      properties:
+        "quantity":
+          type: number
+          minLength: 1
+        "price":
+          type: number
+          minLength: 1
+
+    requestShoppingCartDetail:
+      type: object
+      properties:
+        "quantity_buy_book":
+          type: number
+          minLength: 1
+        "total_price_book":
+          type: number
+          minLength: 1
+
+    responseCartSuccess:
+      type: object
+      properties: {
+      
+        "message": {
+          type: string
+          },
+          "data":{
+            type: object
+            }
+      }
