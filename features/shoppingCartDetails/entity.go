@@ -19,8 +19,11 @@ type Book struct {
 }
 
 type ShoppingCart struct {
-	ID     int
-	UserID uint
+	ID            int
+	UserID        uint
+	TotalQuantity uint
+	TotalPrice    uint
+	Status        string
 }
 
 type Business interface {
@@ -37,4 +40,5 @@ type Data interface {
 	DeleteCartDetails(idCart int, idBook int) (row int, err error)
 	PutCartDetails(idCart int, idBook int, data Core) (row int, err error)
 	IsBookNotInCartDetail(idBook int, idCart int) (cond bool, data Core)
+	FindIDCart(idUser int) (idCart int, err error)
 }

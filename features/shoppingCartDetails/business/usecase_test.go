@@ -28,6 +28,9 @@ func (repo mockShoppingCartDetailData) PutCartDetails(idCart int, idBook int, in
 func (repo mockShoppingCartDetailData) IsBookNotInCartDetail(idBook int, idCart int) (bool, shoppingcartdetails.Core) {
 	return false, shoppingcartdetails.Core{ID: 1, Book: shoppingcartdetails.Book{ID: 1, Title: "Harry Potter", Price: 150000}, QuantityBuyBook: 1, TotalPriceBook: 150000, ShoppingCart: shoppingcartdetails.ShoppingCart{ID: 1, UserID: 1}}
 }
+func (repo mockShoppingCartDetailData) FindIDCart(idUser int) (int, error) {
+	return 1, nil
+}
 
 type mockShoppingCartDetailDataFailed struct{}
 
@@ -48,6 +51,9 @@ func (repo mockShoppingCartDetailDataFailed) PutCartDetails(idCart int, idBook i
 }
 func (repo mockShoppingCartDetailDataFailed) IsBookNotInCartDetail(idBook int, idCart int) (bool, shoppingcartdetails.Core) {
 	return true, shoppingcartdetails.Core{}
+}
+func (repo mockShoppingCartDetailDataFailed) FindIDCart(idUser int) (int, error) {
+	return 0, fmt.Errorf("Failed to find ID Cart")
 }
 
 func TestGetAllCartDetails(t *testing.T) {

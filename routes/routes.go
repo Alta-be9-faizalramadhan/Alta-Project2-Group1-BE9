@@ -39,7 +39,7 @@ func New(presenter factory.Presenter) *echo.Echo {
 	e.PUT("orders", presenter.ShoppingCartPresenter.UpdatedStatusCart, middlewares.JWTMiddleware())
 	e.GET("orders/:idUser", presenter.ShoppingCartPresenter.GetAllHistoryOrder, middlewares.JWTMiddleware())
 
-	e.GET("orderdetails/:idcart", presenter.ShoppingCartDetailPresenter.GetAllCartDetails, middlewares.JWTMiddleware())
+	e.GET("orderdetails", presenter.ShoppingCartDetailPresenter.GetAllCartDetails, middlewares.JWTMiddleware())
 	//e.DELETE("orderdetails/:idcart", presenter.ShoppingCartDetailPresenter.DeleteCartDetails, middlewares.JWTMiddleware())
 	//e.PUT("orderdetails", presenter.ShoppingCartDetailPresenter.UpdateCartDetails, middlewares.JWTMiddleware())
 
