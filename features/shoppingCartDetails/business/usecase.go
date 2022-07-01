@@ -15,8 +15,12 @@ func NewShoppingCartDetailBusiness(scdData shoppingcartdetails.Data) shoppingcar
 	}
 }
 
-func (uc *shoppingCartDetailUseCase) GetAllCartDetails(id, limit, offset int) (resp []shoppingcartdetails.Core, err error) {
-	resp, err = uc.shoppingCartDetailData.SelectAllCartDetails(id, limit, offset)
+func (uc *shoppingCartDetailUseCase) GetAllCartDetails(idUser, limit, offset int) (resp []shoppingcartdetails.Core, err error) {
+	idCart, _ := uc.shoppingCartDetailData.FindIDCart(idUser)
+	if idCart == 0 {
+
+	}
+	resp, err = uc.shoppingCartDetailData.SelectAllCartDetails(idCart, limit, offset)
 	return resp, err
 }
 

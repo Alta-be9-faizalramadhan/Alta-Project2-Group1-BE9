@@ -22,8 +22,9 @@ type Book struct {
 }
 
 type ShoppingCart struct {
-	ID     int  `json:"id"`
-	UserID uint `json:"user_id"`
+	ID     int    `json:"id"`
+	UserID uint   `json:"user_id"`
+	Status string `json:"status"`
 }
 
 func FromCore(data shoppingcartdetails.Core) ShoppingCartDetail {
@@ -40,8 +41,8 @@ func FromCore(data shoppingcartdetails.Core) ShoppingCartDetail {
 		ShoppingCart: ShoppingCart{
 			ID:     data.ShoppingCart.ID,
 			UserID: data.ShoppingCart.UserID,
-		},
-	}
+			Status: data.ShoppingCart.Status,
+		}}
 }
 
 func FromCoreList(data []shoppingcartdetails.Core) []ShoppingCartDetail {

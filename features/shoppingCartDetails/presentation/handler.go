@@ -4,6 +4,7 @@ import (
 	shoppingcartdetails "altaproject/features/shoppingCartDetails"
 	_requestSCD "altaproject/features/shoppingCartDetails/presentation/request"
 	_responseSCD "altaproject/features/shoppingCartDetails/presentation/response"
+	"altaproject/middlewares"
 	"net/http"
 	"strconv"
 
@@ -21,18 +22,29 @@ func NewShoppingCartDetailHandler(business shoppingcartdetails.Business) *Shoppi
 }
 
 func (h *ShoppingCartDetailHandler) GetAllCartDetails(c echo.Context) error {
-	id := c.Param("idcart")
+	//id := c.Param("idUser")
 	limit := c.QueryParam("limit")
 	offset := c.QueryParam("offset")
 	limitint, _ := strconv.Atoi(limit)
 	offsetint, _ := strconv.Atoi(offset)
-	idInt, errid := strconv.Atoi(id)
-	if errid != nil {
-		return c.JSON(http.StatusInternalServerError, map[string]interface{}{
-			"message": "id not recognized",
+	//idInt, errid := strconv.Atoi(id)
+	// if errid != nil {
+	// 	return c.JSON(http.StatusInternalServerError, map[string]interface{}{
+	// 		"message": "id not recognized",
+	// 	})
+	// }
+	idToken, errToken := middlewares.ExtractToken(c)
+	if errToken != nil {
+		c.JSON(http.StatusBadRequest, map[string]interface{}{
+			"message": "invalid token",
 		})
 	}
-	result, err := h.shoppingCartDetailBusiness.GetAllCartDetails(idInt, limitint, offsetint)
+	if idToken == 0 {
+		return c.JSON(http.StatusUnauthorized, map[string]interface{}{
+			"message": "unauthorized",
+		})
+	}
+	result, err := h.shoppingCartDetailBusiness.GetAllCartDetails(idToken, limitint, offsetint)
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, map[string]interface{}{
 			"message": "failed to get all data",

@@ -79,3 +79,12 @@ func (repo *mysqlShoppingCartDetailRepository) IsBookNotInCartDetail(idBook int,
 	}
 	return false, dataShoppingDetail.toCore()
 }
+
+func (repo *mysqlShoppingCartDetailRepository) FindIDCart(idUser int) (int, error) {
+	var cart = ShoppingCart{}
+	result := repo.db.Model(&ShoppingCart{}).Preload("ShoppingCartDetail").First(&cart, "status = ? AND user_id = ?", "Wish List", idUser)
+	if result.Error != nil {
+		return 0, result.Error
+	}
+	return int(cart.ID), nil
+}
